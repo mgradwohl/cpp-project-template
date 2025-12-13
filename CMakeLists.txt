@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 3.28)
 
 project(MyProject VERSION 0.1.0 LANGUAGES CXX)
 
@@ -8,6 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 # Keep clangd fed regardless of config: copy compile_commands.json to source root on build.
 if(NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
@@ -68,6 +69,7 @@ if(MYPROJECT_ENABLE_IPO)
 endif()
 
 include(FetchContent)
+set(FETCHCONTENT_TRY_FIND_PACKAGE_MODE ALWAYS)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     message(STATUS "Configuring MyProject with clang: ${CMAKE_CXX_COMPILER}")
