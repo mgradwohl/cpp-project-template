@@ -1,11 +1,10 @@
 #include <spdlog/spdlog.h>
 
-#include <iostream>
-#include <string>
+#include <cstdio>
 
-auto main(int argc, char* argv[]) -> int
+auto main() -> int
 {
     spdlog::info("MyProject v{}", MYPROJECT_VERSION);
-    std::cout << "Hello, World!" << std::endl;
+    std::printf("Hello, World!\n");
     return 0;
 }
