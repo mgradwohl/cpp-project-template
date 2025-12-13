@@ -1,0 +1,435 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		// ===== Configure (Linux) =====
+		{
+			"label": "Configure Debug (Linux)",
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/configure.sh",
+			"args": [
+				"debug"
+			],
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		{
+			"label": "Configure RelWithDebInfo (Linux)",
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/configure.sh",
+			"args": [
+				"relwithdebinfo"
+			],
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		{
+			"label": "Configure Release (Linux)",
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/configure.sh",
+			"args": [
+				"release"
+			],
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		{
+			"label": "Configure Optimized (Linux)",
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/configure.sh",
+			"args": [
+				"optimized"
+			],
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		// ===== Build (Linux) =====
+		{
+			"label": "Build Debug (Linux)",
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/build.sh",
+			"args": [
+				"debug"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"dependsOn": "Configure Debug (Linux)",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "Build RelWithDebInfo (Linux)",
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/build.sh",
+			"args": [
+				"relwithdebinfo"
+			],
+			"group": "build",
+			"dependsOn": "Configure RelWithDebInfo (Linux)",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "Build Release (Linux)",
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/build.sh",
+			"args": [
+				"release"
+			],
+			"group": "build",
+			"dependsOn": "Configure Release (Linux)",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "Build Optimized (Linux)",
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/build.sh",
+			"args": [
+				"optimized"
+			],
+			"group": "build",
+			"dependsOn": "Configure Optimized (Linux)",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared"
+			}
+		},
+		// ===== Configure (Windows) =====
+		{
+			"label": "Configure Debug (Windows)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-File",
+				"${workspaceFolder}/tools/configure.ps1",
+				"debug"
+			],
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		{
+			"label": "Configure RelWithDebInfo (Windows)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-File",
+				"${workspaceFolder}/tools/configure.ps1",
+				"relwithdebinfo"
+			],
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		{
+			"label": "Configure Release (Windows)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-File",
+				"${workspaceFolder}/tools/configure.ps1",
+				"release"
+			],
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		{
+			"label": "Configure Optimized (Windows)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-File",
+				"${workspaceFolder}/tools/configure.ps1",
+				"optimized"
+			],
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		// ===== Build (Windows) =====
+		{
+			"label": "Build Debug (Windows)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-File",
+				"${workspaceFolder}/tools/build.ps1",
+				"debug"
+			],
+			"dependsOn": "Configure Debug (Windows)",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "Build RelWithDebInfo (Windows)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-File",
+				"${workspaceFolder}/tools/build.ps1",
+				"relwithdebinfo"
+			],
+			"dependsOn": "Configure RelWithDebInfo (Windows)",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "Build Release (Windows)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-File",
+				"${workspaceFolder}/tools/build.ps1",
+				"release"
+			],
+			"dependsOn": "Configure Release (Windows)",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "Build Optimized (Windows)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-File",
+				"${workspaceFolder}/tools/build.ps1",
+				"optimized"
+			],
+			"dependsOn": "Configure Optimized (Windows)",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared"
+			}
+		},
+		// ===== Static Analysis (Linux) =====
+		{
+			"label": "Clang-Tidy (Linux)",
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/clang-tidy.sh",
+			"args": [
+				"-v",
+				"debug"
+			],
+			"group": "test",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		{
+			"label": "Clang-Format (Linux)",
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/clang-format.sh",
+			"args": [
+				"-v"
+			],
+			"group": "test",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		{
+			"label": "Check Format (Linux)",
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/check-format.sh",
+			"args": [
+				"-v"
+			],
+			"group": "test",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		// ===== Static Analysis (Windows) =====
+		{
+			"label": "Clang-Tidy (Windows)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-File",
+				"${workspaceFolder}/tools/clang-tidy.ps1",
+				"-ShowDetails",
+				"debug"
+			],
+			"group": "test",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		{
+			"label": "Clang-Format (Windows)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-File",
+				"${workspaceFolder}/tools/clang-format.ps1",
+				"-ShowDetails"
+			],
+			"group": "test",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		{
+			"label": "Check Format (Windows)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-File",
+				"${workspaceFolder}/tools/check-format.ps1",
+				"-ShowDetails"
+			],
+			"group": "test",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		// ===== Tests =====
+		{
+			"label": "Run Tests (Linux)",
+			"type": "shell",
+			"command": "ctest",
+			"args": [
+				"--test-dir",
+				"${workspaceFolder}/build/debug",
+				"--output-on-failure"
+			],
+			"group": "test",
+			"dependsOn": "Build Debug (Linux)",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "Run Tests (Windows)",
+			"type": "shell",
+			"command": "ctest",
+			"args": [
+				"--test-dir",
+				"${workspaceFolder}/build/win-debug",
+				"--output-on-failure"
+			],
+			"group": "test",
+			"dependsOn": "Build Debug (Windows)",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			}
+		}
+	]
+}
