@@ -12,11 +12,25 @@ A modern C++23 project template with clang toolchain, CMake, Google Test, and VS
 - **VS Code** tasks, launch configs, and clangd support
 - **Cross-platform** support for Linux and Windows
 
-## Quick Start
+## Getting Started
 
-### 1. Create Your Project
+### Step 1: Create a New Repository from This Template
 
-Use this template on GitHub, then run the setup script:
+1. Click the green **"Use this template"** button at the top of this page
+2. Select **"Create a new repository"**
+3. Name your repository (e.g., `AwesomeApp`)
+4. Click **"Create repository"**
+
+### Step 2: Clone Your New Repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+cd YOUR_REPO_NAME
+```
+
+### Step 3: Run the Setup Script
+
+The setup script renames all placeholder names (`MyProject`, `MYPROJECT`, `myproject`) throughout the codebase to your project name:
 
 ```bash
 # Linux/macOS
@@ -24,21 +38,36 @@ Use this template on GitHub, then run the setup script:
 
 # Windows (PowerShell)
 .\setup.ps1 -Name "YourProjectName"
+
+# Optional: include author name
+./setup.sh --name "YourProjectName" --author "Your Name"
 ```
 
-### 2. Build
+> **Note:** The setup script deletes itself after running - it's only needed once.
+
+### Step 4: Commit the Changes
+
+```bash
+git add -A
+git commit -m "Initial project setup"
+git push
+```
+
+### Step 5: Build and Run
 
 ```bash
 # Linux
 ./tools/configure.sh debug
 ./tools/build.sh debug
+./build/debug/YourProjectName
 
 # Windows (PowerShell)
 .\tools\configure.ps1 debug
 .\tools\build.ps1 debug
+.\build\win-debug\YourProjectName.exe
 ```
 
-### 3. Run Tests
+### Step 6: Run Tests
 
 ```bash
 ctest --test-dir build/debug --output-on-failure
@@ -68,7 +97,7 @@ sudo apt install clang-21 lld-21 cmake ninja-build
 ```
 .
 ├── CMakeLists.txt          # Main build configuration
-├── setup.sh / setup.ps1    # Project renaming scripts
+├── setup.sh / setup.ps1    # Project renaming scripts (deleted after use)
 ├── src/
 │   └── main.cpp            # Application entry point
 ├── tests/
@@ -81,6 +110,7 @@ sudo apt install clang-21 lld-21 cmake ninja-build
 │   └── clang-format.sh/ps1 # Code formatting
 ├── .clang-format           # Formatting rules
 ├── .clang-tidy             # Static analysis rules
+├── .clangd                 # clangd LSP configuration
 └── .vscode/
     ├── tasks.json          # Build tasks
     ├── launch.json         # Debug configurations
@@ -89,18 +119,18 @@ sudo apt install clang-21 lld-21 cmake ninja-build
 
 ## VS Code Integration
 
-Install recommended extensions:
-- clangd (LLVM)
-- CodeLLDB (for debugging)
-- CMake Tools
+Install recommended extensions (VS Code will prompt you):
+- **clangd** (LLVM) - IntelliSense and code completion
+- **CodeLLDB** - Debugging support
+- **CMake Tools** - CMake integration
 
 ### Build Tasks
 - `Ctrl+Shift+B` - Build debug (default)
-- Use Command Palette for other configurations
+- Use Command Palette (`Ctrl+Shift+P`) → "Tasks: Run Task" for other configurations
 
 ### Debugging
 - `F5` - Debug with current launch configuration
-- Multiple configurations for Debug, RelWithDebInfo, Release, Optimized
+- Multiple configurations available for Debug, RelWithDebInfo, Release, Optimized
 
 ## Build Types
 
@@ -115,8 +145,8 @@ Install recommended extensions:
 
 ### Formatting
 ```bash
-./tools/clang-format.sh        # Apply formatting
-./tools/check-format.sh        # Check compliance
+./tools/clang-format.sh        # Apply formatting (modifies files)
+./tools/check-format.sh        # Check compliance (no changes)
 ```
 
 ### Static Analysis
@@ -136,6 +166,19 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(mylib)
 ```
+
+Then link to your target:
+
+```cmake
+target_link_libraries(YourProjectName PRIVATE mylib)
+```
+
+## CI/CD
+
+This template includes a GitHub Actions workflow (`.github/workflows/ci.yml`) that automatically:
+- Builds on Linux (Ubuntu 24.04) and Windows
+- Runs all tests
+- Checks code formatting
 
 ## License
 
