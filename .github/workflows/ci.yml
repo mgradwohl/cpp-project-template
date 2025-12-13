@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-24.04
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ninja-build clang lld
+    
+    - name: Configure
+      run: ./tools/configure.sh debug
+    
+    - name: Build
+      run: ./tools/build.sh debug
+    
+    - name: Test
+      run: ctest --test-dir build/debug --output-on-failure
+
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install LLVM
+      run: choco install llvm ninja -y
+    
+    - name: Configure
+      env:
+        LLVM_ROOT: C:\Program Files\LLVM
+      run: pwsh -File tools/configure.ps1 debug
+    
+    - name: Build
+      env:
+        LLVM_ROOT: C:\Program Files\LLVM
+      run: pwsh -File tools/build.ps1 debug
+    
+    - name: Test
+      run: ctest --test-dir build/win-debug --output-on-failure
+
+  format-check:
+    runs-on: ubuntu-24.04
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install clang-format
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang-format
+    
+    - name: Check formatting
+      run: ./tools/check-format.sh
