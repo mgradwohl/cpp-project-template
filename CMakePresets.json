@@ -1,0 +1,262 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 28,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_CXX_STANDARD": "23",
+                "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+                "CMAKE_CXX_EXTENSIONS": "OFF",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "linux-base",
+            "hidden": true,
+            "inherits": "base",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_EXE_LINKER_FLAGS": "-fuse-ld=lld",
+                "CMAKE_SHARED_LINKER_FLAGS": "-fuse-ld=lld"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "hostOS": [
+                        "Linux"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "windows-base",
+            "hidden": true,
+            "inherits": "base",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "$env{LLVM_ROOT}/bin/clang++.exe",
+                "CMAKE_C_COMPILER": "$env{LLVM_ROOT}/bin/clang.exe",
+                "CMAKE_EXE_LINKER_FLAGS": "-fuse-ld=lld",
+                "CMAKE_SHARED_LINKER_FLAGS": "-fuse-ld=lld"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "hostOS": [
+                        "Windows"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "debug",
+            "displayName": "Debug",
+            "description": "Debug build with full debugging information",
+            "inherits": "linux-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "relwithdebinfo",
+            "displayName": "RelWithDebInfo",
+            "description": "Release build with debug information",
+            "inherits": "linux-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "release",
+            "displayName": "Release",
+            "description": "Optimized release build",
+            "inherits": "linux-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "optimized",
+            "displayName": "Optimized",
+            "description": "Fully optimized build with LTO, march=x86-64-v3, stripped",
+            "inherits": "linux-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "MYPROJECT_ENABLE_IPO": "ON",
+                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": "ON",
+                "CMAKE_EXE_LINKER_FLAGS_RELEASE": "-fuse-ld=lld -s",
+                "CMAKE_SHARED_LINKER_FLAGS_RELEASE": "-s",
+                "CMAKE_CXX_FLAGS_RELEASE": "-O3 -DNDEBUG -march=x86-64-v3 -fomit-frame-pointer"
+            }
+        },
+        {
+            "name": "win-debug",
+            "displayName": "Windows Debug",
+            "description": "Debug build for Windows",
+            "inherits": "windows-base",
+            "binaryDir": "${sourceDir}/build/win-debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "win-relwithdebinfo",
+            "displayName": "Windows RelWithDebInfo",
+            "description": "Release with debug info for Windows",
+            "inherits": "windows-base",
+            "binaryDir": "${sourceDir}/build/win-relwithdebinfo",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "win-release",
+            "displayName": "Windows Release",
+            "description": "Release build for Windows",
+            "inherits": "windows-base",
+            "binaryDir": "${sourceDir}/build/win-release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "win-optimized",
+            "displayName": "Windows Optimized",
+            "description": "Fully optimized Windows build with LTO",
+            "inherits": "windows-base",
+            "binaryDir": "${sourceDir}/build/win-optimized",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "MYPROJECT_ENABLE_IPO": "ON",
+                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": "ON",
+                "CMAKE_EXE_LINKER_FLAGS_RELEASE": "-fuse-ld=lld -s",
+                "CMAKE_SHARED_LINKER_FLAGS_RELEASE": "-s",
+                "CMAKE_CXX_FLAGS_RELEASE": "-O3 -DNDEBUG -march=x86-64-v3 -fomit-frame-pointer"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "debug",
+            "displayName": "Debug",
+            "configurePreset": "debug"
+        },
+        {
+            "name": "relwithdebinfo",
+            "displayName": "RelWithDebInfo",
+            "configurePreset": "relwithdebinfo"
+        },
+        {
+            "name": "release",
+            "displayName": "Release",
+            "configurePreset": "release"
+        },
+        {
+            "name": "optimized",
+            "displayName": "Optimized",
+            "configurePreset": "optimized"
+        },
+        {
+            "name": "win-debug",
+            "displayName": "Windows Debug",
+            "configurePreset": "win-debug"
+        },
+        {
+            "name": "win-relwithdebinfo",
+            "displayName": "Windows RelWithDebInfo",
+            "configurePreset": "win-relwithdebinfo"
+        },
+        {
+            "name": "win-release",
+            "displayName": "Windows Release",
+            "configurePreset": "win-release"
+        },
+        {
+            "name": "win-optimized",
+            "displayName": "Windows Optimized",
+            "configurePreset": "win-optimized"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "debug",
+            "displayName": "Debug Tests",
+            "configurePreset": "debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "relwithdebinfo",
+            "displayName": "RelWithDebInfo Tests",
+            "configurePreset": "relwithdebinfo",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "release",
+            "displayName": "Release Tests",
+            "configurePreset": "release",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "optimized",
+            "displayName": "Optimized Tests",
+            "configurePreset": "optimized",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "win-debug",
+            "displayName": "Windows Debug Tests",
+            "configurePreset": "win-debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "win-relwithdebinfo",
+            "displayName": "Windows RelWithDebInfo Tests",
+            "configurePreset": "win-relwithdebinfo",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "win-release",
+            "displayName": "Windows Release Tests",
+            "configurePreset": "win-release",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "win-optimized",
+            "displayName": "Windows Optimized Tests",
+            "configurePreset": "win-optimized",
+            "output": {
+                "outputOnFailure": true
+            }
+        }
+    ]
+}

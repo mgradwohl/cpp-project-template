@@ -30,13 +30,11 @@ $ProjectRoot = Split-Path -Parent $ScriptDir
 # Build directory
 $BuildDir = Join-Path $ProjectRoot "build\win-$BuildType"
 
-# Configure if needed
+# Configure if needed (using CMake presets)
 $NinjaFile = Join-Path $BuildDir "build.ninja"
 if (-not (Test-Path $NinjaFile)) {
-    Write-Host "Build not configured. Running configure.ps1 $BuildType..."
-    $ConfigArgs = @($BuildType)
-    if ($ShowDetails) { $ConfigArgs = @("-ShowDetails") + $ConfigArgs }
-    & "$ScriptDir\configure.ps1" @ConfigArgs
+    Write-Host "Build not configured. Running cmake --preset win-$BuildType..."
+    & cmake --preset "win-$BuildType"
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 }
 

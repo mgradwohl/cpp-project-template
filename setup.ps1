@@ -110,6 +110,6 @@ Write-Host "Setup complete! Your project '$Name' is ready." -ForegroundColor Gre
 Write-Host ""
 Write-Host "Next steps:"
 Write-Host "  1. Review the changes: git diff"
-Write-Host "  2. Build the project: .\tools\configure.ps1; .\tools\build.ps1"
-Write-Host "  3. Run tests: ctest --test-dir build/win-debug"
+Write-Host "  2. Build the project: cmake --preset win-debug; cmake --build --preset win-debug"
+Write-Host "  3. Run tests: ctest --preset win-debug"
 Write-Host "  4. Commit: git add -A; git commit -m 'Initial project setup'"

@@ -1,4 +1,6 @@
 {
+    // CMake Presets - VS Code CMake Tools will use CMakePresets.json
+    "cmake.useCMakePresets": "always",
     "cmake.generator": "Ninja",
     "cmake.configureSettings": {
         "CMAKE_C_STANDARD": "17",

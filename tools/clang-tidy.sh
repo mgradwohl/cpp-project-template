@@ -41,10 +41,10 @@ done
 
 BUILD_DIR="${PROJECT_ROOT}/build/${BUILD_TYPE}"
 
-# Configure if needed
+# Configure if needed (using CMake presets)
 if [[ ! -f "$BUILD_DIR/build.ninja" ]]; then
-    echo "Build not configured. Running configure.sh $BUILD_TYPE..."
-    "$SCRIPT_DIR/configure.sh" $($VERBOSE && echo "-v") "$BUILD_TYPE"
+    echo "Build not configured. Running cmake --preset $BUILD_TYPE..."
+    cmake --preset "$BUILD_TYPE"
 fi
 
 if $VERBOSE; then

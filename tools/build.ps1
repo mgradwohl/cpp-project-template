@@ -1,7 +1,13 @@
 <#
 .SYNOPSIS
-    Build project on Windows (run configure.ps1 first).
+    DEPRECATED: Use CMake presets instead.
 .DESCRIPTION
+    This script is deprecated. Use CMake presets instead:
+        cmake --build --preset win-debug
+        cmake --build --preset win-release
+    Run 'cmake --list-presets' to see all available presets.
+
+    This script is kept for backwards compatibility.
     Runs CMake build for the specified build type.
 .PARAMETER BuildType
     Build type: debug, relwithdebinfo, release, optimized (default: debug)
@@ -28,6 +34,11 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+
+Write-Warning "This script is deprecated. Consider using CMake presets instead:"
+Write-Host "  cmake --build --preset win-debug"
+Write-Host "  cmake --build --preset win-release"
+Write-Host ""
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = Split-Path -Parent $ScriptDir

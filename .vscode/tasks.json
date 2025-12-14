@@ -1,14 +1,20 @@
 {
 	"version": "2.0.0",
 	"tasks": [
-		// ===== Configure (Linux) =====
 		{
-			"label": "Configure Debug (Linux)",
+			"label": "CMake: Configure Debug",
 			"type": "shell",
-			"command": "${workspaceFolder}/tools/configure.sh",
+			"command": "cmake",
 			"args": [
+				"--preset",
 				"debug"
 			],
+			"windows": {
+				"args": [
+					"--preset",
+					"win-debug"
+				]
+			},
 			"group": "build",
 			"problemMatcher": [
 				"$gcc"
@@ -20,12 +26,19 @@
 			}
 		},
 		{
-			"label": "Configure RelWithDebInfo (Linux)",
+			"label": "CMake: Configure RelWithDebInfo",
 			"type": "shell",
-			"command": "${workspaceFolder}/tools/configure.sh",
+			"command": "cmake",
 			"args": [
+				"--preset",
 				"relwithdebinfo"
 			],
+			"windows": {
+				"args": [
+					"--preset",
+					"win-relwithdebinfo"
+				]
+			},
 			"group": "build",
 			"problemMatcher": [
 				"$gcc"
@@ -37,12 +50,19 @@
 			}
 		},
 		{
-			"label": "Configure Release (Linux)",
+			"label": "CMake: Configure Release",
 			"type": "shell",
-			"command": "${workspaceFolder}/tools/configure.sh",
+			"command": "cmake",
 			"args": [
+				"--preset",
 				"release"
 			],
+			"windows": {
+				"args": [
+					"--preset",
+					"win-release"
+				]
+			},
 			"group": "build",
 			"problemMatcher": [
 				"$gcc"
@@ -54,12 +74,19 @@
 			}
 		},
 		{
-			"label": "Configure Optimized (Linux)",
+			"label": "CMake: Configure Optimized",
 			"type": "shell",
-			"command": "${workspaceFolder}/tools/configure.sh",
+			"command": "cmake",
 			"args": [
+				"--preset",
 				"optimized"
 			],
+			"windows": {
+				"args": [
+					"--preset",
+					"win-optimized"
+				]
+			},
 			"group": "build",
 			"problemMatcher": [
 				"$gcc"
@@ -70,19 +97,27 @@
 				"clear": true
 			}
 		},
-		// ===== Build (Linux) =====
 		{
-			"label": "Build Debug (Linux)",
+			"label": "CMake: Build Debug",
 			"type": "shell",
-			"command": "${workspaceFolder}/tools/build.sh",
+			"command": "cmake",
 			"args": [
+				"--build",
+				"--preset",
 				"debug"
 			],
+			"windows": {
+				"args": [
+					"--build",
+					"--preset",
+					"win-debug"
+				]
+			},
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
-			"dependsOn": "Configure Debug (Linux)",
+			"dependsOn": "CMake: Configure Debug",
 			"problemMatcher": [
 				"$gcc"
 			],
@@ -92,14 +127,23 @@
 			}
 		},
 		{
-			"label": "Build RelWithDebInfo (Linux)",
+			"label": "CMake: Build RelWithDebInfo",
 			"type": "shell",
-			"command": "${workspaceFolder}/tools/build.sh",
+			"command": "cmake",
 			"args": [
+				"--build",
+				"--preset",
 				"relwithdebinfo"
 			],
+			"windows": {
+				"args": [
+					"--build",
+					"--preset",
+					"win-relwithdebinfo"
+				]
+			},
 			"group": "build",
-			"dependsOn": "Configure RelWithDebInfo (Linux)",
+			"dependsOn": "CMake: Configure RelWithDebInfo",
 			"problemMatcher": [
 				"$gcc"
 			],
@@ -109,14 +153,23 @@
 			}
 		},
 		{
-			"label": "Build Release (Linux)",
+			"label": "CMake: Build Release",
 			"type": "shell",
-			"command": "${workspaceFolder}/tools/build.sh",
+			"command": "cmake",
 			"args": [
+				"--build",
+				"--preset",
 				"release"
 			],
+			"windows": {
+				"args": [
+					"--build",
+					"--preset",
+					"win-release"
+				]
+			},
 			"group": "build",
-			"dependsOn": "Configure Release (Linux)",
+			"dependsOn": "CMake: Configure Release",
 			"problemMatcher": [
 				"$gcc"
 			],
@@ -126,14 +179,23 @@
 			}
 		},
 		{
-			"label": "Build Optimized (Linux)",
+			"label": "CMake: Build Optimized",
 			"type": "shell",
-			"command": "${workspaceFolder}/tools/build.sh",
+			"command": "cmake",
 			"args": [
+				"--build",
+				"--preset",
 				"optimized"
 			],
+			"windows": {
+				"args": [
+					"--build",
+					"--preset",
+					"win-optimized"
+				]
+			},
 			"group": "build",
-			"dependsOn": "Configure Optimized (Linux)",
+			"dependsOn": "CMake: Configure Optimized",
 			"problemMatcher": [
 				"$gcc"
 			],
@@ -142,165 +204,45 @@
 				"panel": "shared"
 			}
 		},
-		// ===== Configure (Windows) =====
 		{
-			"label": "Configure Debug (Windows)",
+			"label": "CMake: Test Debug",
 			"type": "shell",
-			"command": "pwsh",
+			"command": "ctest",
 			"args": [
-				"-File",
-				"${workspaceFolder}/tools/configure.ps1",
+				"--preset",
 				"debug"
 			],
-			"group": "build",
-			"problemMatcher": [
-				"$gcc"
-			],
+			"windows": {
+				"args": [
+					"--preset",
+					"win-debug"
+				]
+			},
+			"group": "test",
+			"dependsOn": "CMake: Build Debug",
+			"problemMatcher": [],
 			"presentation": {
-				"reveal": "silent",
-				"panel": "shared",
-				"clear": true
-			}
-		},
-		{
-			"label": "Configure RelWithDebInfo (Windows)",
-			"type": "shell",
-			"command": "pwsh",
-			"args": [
-				"-File",
-				"${workspaceFolder}/tools/configure.ps1",
-				"relwithdebinfo"
-			],
-			"group": "build",
-			"problemMatcher": [
-				"$gcc"
-			],
-			"presentation": {
-				"reveal": "silent",
-				"panel": "shared",
-				"clear": true
-			}
-		},
-		{
-			"label": "Configure Release (Windows)",
-			"type": "shell",
-			"command": "pwsh",
-			"args": [
-				"-File",
-				"${workspaceFolder}/tools/configure.ps1",
-				"release"
-			],
-			"group": "build",
-			"problemMatcher": [
-				"$gcc"
-			],
-			"presentation": {
-				"reveal": "silent",
-				"panel": "shared",
-				"clear": true
-			}
-		},
-		{
-			"label": "Configure Optimized (Windows)",
-			"type": "shell",
-			"command": "pwsh",
-			"args": [
-				"-File",
-				"${workspaceFolder}/tools/configure.ps1",
-				"optimized"
-			],
-			"group": "build",
-			"problemMatcher": [
-				"$gcc"
-			],
-			"presentation": {
-				"reveal": "silent",
-				"panel": "shared",
-				"clear": true
-			}
-		},
-		// ===== Build (Windows) =====
-		{
-			"label": "Build Debug (Windows)",
-			"type": "shell",
-			"command": "pwsh",
-			"args": [
-				"-File",
-				"${workspaceFolder}/tools/build.ps1",
-				"debug"
-			],
-			"dependsOn": "Configure Debug (Windows)",
-			"problemMatcher": [
-				"$gcc"
-			],
-			"presentation": {
-				"reveal": "silent",
+				"reveal": "always",
 				"panel": "shared"
 			}
 		},
 		{
-			"label": "Build RelWithDebInfo (Windows)",
-			"type": "shell",
-			"command": "pwsh",
-			"args": [
-				"-File",
-				"${workspaceFolder}/tools/build.ps1",
-				"relwithdebinfo"
-			],
-			"dependsOn": "Configure RelWithDebInfo (Windows)",
-			"problemMatcher": [
-				"$gcc"
-			],
-			"presentation": {
-				"reveal": "silent",
-				"panel": "shared"
-			}
-		},
-		{
-			"label": "Build Release (Windows)",
-			"type": "shell",
-			"command": "pwsh",
-			"args": [
-				"-File",
-				"${workspaceFolder}/tools/build.ps1",
-				"release"
-			],
-			"dependsOn": "Configure Release (Windows)",
-			"problemMatcher": [
-				"$gcc"
-			],
-			"presentation": {
-				"reveal": "silent",
-				"panel": "shared"
-			}
-		},
-		{
-			"label": "Build Optimized (Windows)",
-			"type": "shell",
-			"command": "pwsh",
-			"args": [
-				"-File",
-				"${workspaceFolder}/tools/build.ps1",
-				"optimized"
-			],
-			"dependsOn": "Configure Optimized (Windows)",
-			"problemMatcher": [
-				"$gcc"
-			],
-			"presentation": {
-				"reveal": "silent",
-				"panel": "shared"
-			}
-		},
-		// ===== Static Analysis (Linux) =====
-		{
-			"label": "Clang-Tidy (Linux)",
+			"label": "Clang-Tidy",
 			"type": "shell",
 			"command": "${workspaceFolder}/tools/clang-tidy.sh",
 			"args": [
 				"-v",
 				"debug"
 			],
+			"windows": {
+				"command": "pwsh",
+				"args": [
+					"-File",
+					"${workspaceFolder}/tools/clang-tidy.ps1",
+					"-ShowDetails",
+					"debug"
+				]
+			},
 			"group": "test",
 			"problemMatcher": [
 				"$gcc"
@@ -312,12 +254,20 @@
 			}
 		},
 		{
-			"label": "Clang-Format (Linux)",
+			"label": "Clang-Format",
 			"type": "shell",
 			"command": "${workspaceFolder}/tools/clang-format.sh",
 			"args": [
 				"-v"
 			],
+			"windows": {
+				"command": "pwsh",
+				"args": [
+					"-File",
+					"${workspaceFolder}/tools/clang-format.ps1",
+					"-ShowDetails"
+				]
+			},
 			"group": "test",
 			"problemMatcher": [],
 			"presentation": {
@@ -327,108 +277,26 @@
 			}
 		},
 		{
-			"label": "Check Format (Linux)",
+			"label": "Check Format",
 			"type": "shell",
 			"command": "${workspaceFolder}/tools/check-format.sh",
 			"args": [
 				"-v"
 			],
+			"windows": {
+				"command": "pwsh",
+				"args": [
+					"-File",
+					"${workspaceFolder}/tools/check-format.ps1",
+					"-ShowDetails"
+				]
+			},
 			"group": "test",
 			"problemMatcher": [],
 			"presentation": {
 				"reveal": "always",
 				"panel": "shared",
 				"clear": true
-			}
-		},
-		// ===== Static Analysis (Windows) =====
-		{
-			"label": "Clang-Tidy (Windows)",
-			"type": "shell",
-			"command": "pwsh",
-			"args": [
-				"-File",
-				"${workspaceFolder}/tools/clang-tidy.ps1",
-				"-ShowDetails",
-				"debug"
-			],
-			"group": "test",
-			"problemMatcher": [
-				"$gcc"
-			],
-			"presentation": {
-				"reveal": "always",
-				"panel": "shared",
-				"clear": true
-			}
-		},
-		{
-			"label": "Clang-Format (Windows)",
-			"type": "shell",
-			"command": "pwsh",
-			"args": [
-				"-File",
-				"${workspaceFolder}/tools/clang-format.ps1",
-				"-ShowDetails"
-			],
-			"group": "test",
-			"problemMatcher": [],
-			"presentation": {
-				"reveal": "always",
-				"panel": "shared",
-				"clear": true
-			}
-		},
-		{
-			"label": "Check Format (Windows)",
-			"type": "shell",
-			"command": "pwsh",
-			"args": [
-				"-File",
-				"${workspaceFolder}/tools/check-format.ps1",
-				"-ShowDetails"
-			],
-			"group": "test",
-			"problemMatcher": [],
-			"presentation": {
-				"reveal": "always",
-				"panel": "shared",
-				"clear": true
-			}
-		},
-		// ===== Tests =====
-		{
-			"label": "Run Tests (Linux)",
-			"type": "shell",
-			"command": "ctest",
-			"args": [
-				"--test-dir",
-				"${workspaceFolder}/build/debug",
-				"--output-on-failure"
-			],
-			"group": "test",
-			"dependsOn": "Build Debug (Linux)",
-			"problemMatcher": [],
-			"presentation": {
-				"reveal": "always",
-				"panel": "shared"
-			}
-		},
-		{
-			"label": "Run Tests (Windows)",
-			"type": "shell",
-			"command": "ctest",
-			"args": [
-				"--test-dir",
-				"${workspaceFolder}/build/win-debug",
-				"--output-on-failure"
-			],
-			"group": "test",
-			"dependsOn": "Build Debug (Windows)",
-			"problemMatcher": [],
-			"presentation": {
-				"reveal": "always",
-				"panel": "shared"
 			}
 		}
 	]

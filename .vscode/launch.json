@@ -1,122 +1,74 @@
 {
     "version": "0.2.0",
     "configurations": [
-        // Linux launchers
         {
-            "name": "Debug MyProject (Debug, Linux)",
+            "name": "Debug MyProject (Debug)",
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/build/debug/MyProject",
+            "windows": {
+                "program": "${workspaceFolder}/build/win-debug/MyProject.exe"
+            },
             "args": [],
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Build Debug (Linux)",
+            "preLaunchTask": "CMake: Build Debug",
             "terminal": "integrated",
             "presentation": {
-                "group": "run-linux",
+                "group": "debug",
                 "order": 1
             }
         },
         {
-            "name": "Debug MyProject (RelWithDebInfo, Linux)",
+            "name": "Debug MyProject (RelWithDebInfo)",
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/build/relwithdebinfo/MyProject",
+            "windows": {
+                "program": "${workspaceFolder}/build/win-relwithdebinfo/MyProject.exe"
+            },
             "args": [],
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Build RelWithDebInfo (Linux)",
+            "preLaunchTask": "CMake: Build RelWithDebInfo",
             "terminal": "integrated",
             "presentation": {
-                "group": "run-linux",
+                "group": "debug",
                 "order": 2
             }
         },
         {
-            "name": "Run MyProject (Release, Linux)",
+            "name": "Run MyProject (Release)",
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/build/release/MyProject",
+            "windows": {
+                "program": "${workspaceFolder}/build/win-release/MyProject.exe"
+            },
             "args": [],
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Build Release (Linux)",
+            "preLaunchTask": "CMake: Build Release",
             "terminal": "integrated",
             "noDebug": true,
             "presentation": {
-                "group": "run-linux",
-                "order": 3
-            }
-        },
-        {
-            "name": "Run MyProject (Optimized, Linux)",
-            "type": "lldb",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/optimized/MyProject",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Build Optimized (Linux)",
-            "terminal": "integrated",
-            "noDebug": true,
-            "presentation": {
-                "group": "run-linux",
-                "order": 4
-            }
-        },
-        // Windows launchers
-        {
-            "name": "Debug MyProject (Debug, Windows)",
-            "type": "lldb",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/win-debug/MyProject.exe",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Build Debug (Windows)",
-            "terminal": "integrated",
-            "presentation": {
-                "group": "run-windows",
+                "group": "run",
                 "order": 1
             }
         },
         {
-            "name": "Debug MyProject (RelWithDebInfo, Windows)",
+            "name": "Run MyProject (Optimized)",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/build/win-relwithdebinfo/MyProject.exe",
+            "program": "${workspaceFolder}/build/optimized/MyProject",
+            "windows": {
+                "program": "${workspaceFolder}/build/win-optimized/MyProject.exe"
+            },
             "args": [],
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Build RelWithDebInfo (Windows)",
+            "preLaunchTask": "CMake: Build Optimized",
             "terminal": "integrated",
+            "noDebug": true,
             "presentation": {
-                "group": "run-windows",
+                "group": "run",
                 "order": 2
-            }
-        },
-        {
-            "name": "Run MyProject (Release, Windows)",
-            "type": "lldb",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/win-release/MyProject.exe",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Build Release (Windows)",
-            "terminal": "integrated",
-            "noDebug": true,
-            "presentation": {
-                "group": "run-windows",
-                "order": 3
-            }
-        },
-        {
-            "name": "Run MyProject (Optimized, Windows)",
-            "type": "lldb",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/win-optimized/MyProject.exe",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Build Optimized (Windows)",
-            "terminal": "integrated",
-            "noDebug": true,
-            "presentation": {
-                "group": "run-windows",
-                "order": 4
             }
         }
     ]

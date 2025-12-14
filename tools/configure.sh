@@ -1,7 +1,19 @@
 #!/usr/bin/env bash
-# Configure project for building
+# DEPRECATED: Use CMake presets instead:
+#   cmake --preset debug
+#   cmake --preset release
+#   cmake --preset optimized
+# See CMakePresets.json for all available presets.
+#
+# This script is kept for backwards compatibility.
 # Usage: ./configure.sh [OPTIONS] [BUILD_TYPE]
 set -euo pipefail
+
+echo "NOTE: This script is deprecated. Consider using CMake presets instead:" >&2
+echo "  cmake --preset debug" >&2
+echo "  cmake --preset release" >&2
+echo "Run 'cmake --list-presets' to see all available presets." >&2
+echo "" >&2
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"

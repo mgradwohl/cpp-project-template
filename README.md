@@ -1,11 +1,11 @@
 # MyProject
 
-A modern C++23 project template with clang toolchain, CMake, Google Test, and VS Code integration.
+A modern C++23 project template with clang toolchain, CMake Presets, Google Test, and VS Code integration.
 
 ## Features
 
 - **Modern C++23** with clang as the primary compiler
-- **CMake 3.26+** build system with Ninja
+- **CMake 3.28+** build system with CMake Presets and Ninja
 - **Google Test** for unit testing
 - **spdlog** for logging (via FetchContent)
 - **clang-tidy** and **clang-format** integration
@@ -55,29 +55,40 @@ git push
 
 ### Step 5: Build and Run
 
+Using CMake Presets (recommended):
+
 ```bash
 # Linux
-./tools/configure.sh debug
-./tools/build.sh debug
+cmake --preset debug
+cmake --build --preset debug
 ./build/debug/YourProjectName
 
 # Windows (PowerShell)
-.\tools\configure.ps1 debug
-.\tools\build.ps1 debug
+cmake --preset win-debug
+cmake --build --preset win-debug
 .\build\win-debug\YourProjectName.exe
+```
+
+List all available presets:
+```bash
+cmake --list-presets
 ```
 
 ### Step 6: Run Tests
 
 ```bash
-ctest --test-dir build/debug --output-on-failure
+# Linux
+ctest --preset debug
+
+# Windows
+ctest --preset win-debug
 ```
 
 ## Requirements
 
 ### Linux
 - Clang 17+ (21 recommended)
-- CMake 3.26+
+- CMake 3.28+
 - Ninja
 - lld (LLVM linker)
 
@@ -88,7 +99,7 @@ sudo apt install clang-21 lld-21 cmake ninja-build
 
 ### Windows
 - LLVM/Clang (set `LLVM_ROOT` environment variable)
-- CMake 3.26+
+- CMake 3.28+
 - Ninja
 - (Optional) vcpkg for package management
 
@@ -97,6 +108,7 @@ sudo apt install clang-21 lld-21 cmake ninja-build
 ```
 .
 ├── CMakeLists.txt          # Main build configuration
+├── CMakePresets.json       # CMake presets for all platforms/configs
 ├── setup.sh / setup.ps1    # Project renaming scripts (deleted after use)
 ├── src/
 │   └── main.cpp            # Application entry point
@@ -104,16 +116,15 @@ sudo apt install clang-21 lld-21 cmake ninja-build
 │   ├── CMakeLists.txt      # Test configuration
 │   └── test_main.cpp       # Example tests
 ├── tools/
-│   ├── configure.sh/ps1    # CMake configure scripts
-│   ├── build.sh/ps1        # Build scripts
 │   ├── clang-tidy.sh/ps1   # Static analysis
-│   └── clang-format.sh/ps1 # Code formatting
+│   ├── clang-format.sh/ps1 # Code formatting
+│   └── check-format.sh/ps1 # Format checking
 ├── .clang-format           # Formatting rules
 ├── .clang-tidy             # Static analysis rules
 ├── .clangd                 # clangd LSP configuration
 └── .vscode/
-    ├── tasks.json          # Build tasks
-    ├── launch.json         # Debug configurations
+    ├── tasks.json          # Build tasks (platform-aware)
+    ├── launch.json         # Debug configurations (platform-aware)
     └── settings.json       # Editor settings
 ```
 
@@ -125,21 +136,34 @@ Install recommended extensions (VS Code will prompt you):
 - **CMake Tools** - CMake integration
 
 ### Build Tasks
+
+Tasks automatically use the correct preset for your platform (Linux or Windows):
+
 - `Ctrl+Shift+B` - Build debug (default)
 - Use Command Palette (`Ctrl+Shift+P`) → "Tasks: Run Task" for other configurations
 
+Available tasks:
+- CMake: Configure/Build Debug, RelWithDebInfo, Release, Optimized
+- CMake: Test Debug
+- Clang-Tidy, Clang-Format, Check Format
+
 ### Debugging
+
+Launch configurations automatically use the correct paths for your platform:
+
 - `F5` - Debug with current launch configuration
-- Multiple configurations available for Debug, RelWithDebInfo, Release, Optimized
+- Configurations: Debug (Debug), Debug (RelWithDebInfo), Run (Release), Run (Optimized)
 
 ## Build Types
 
-| Type | Description |
-|------|-------------|
-| `debug` | Debug symbols, no optimization |
-| `relwithdebinfo` | Debug symbols + optimization |
-| `release` | Optimized, no debug symbols |
-| `optimized` | LTO, march=x86-64-v3, stripped |
+Available as CMake presets (use `cmake --list-presets` to see all):
+
+| Preset (Linux) | Preset (Windows) | Description |
+|----------------|------------------|-------------|
+| `debug` | `win-debug` | Debug symbols, no optimization |
+| `relwithdebinfo` | `win-relwithdebinfo` | Debug symbols + optimization |
+| `release` | `win-release` | Optimized, no debug symbols |
+| `optimized` | `win-optimized` | LTO, march=x86-64-v3, stripped |
 
 ## Code Quality Tools
 
