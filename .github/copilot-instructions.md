@@ -12,12 +12,14 @@ MyProject is a cross-platform C++23 application built with modern tooling. The p
 ## Development Environment
 
 ### Required Tools
-- **Compiler:** Clang 17+ with lld linker (21 recommended)
+- **Compiler:** Clang 21+ with lld linker
 - **Build System:** CMake 3.28+ with Ninja and CMake Presets
 - **Compiler Cache:** ccache 4.9.1+ (required for faster rebuilds)
+- **Static Analysis:** clang-tidy (included with LLVM)
+- **Code Formatting:** clang-format (included with LLVM)
+- **Coverage:** llvm-profdata, llvm-cov (included with LLVM)
 - **Testing:** Google Test (via CMake FetchContent)
 - **Logging:** spdlog (via CMake FetchContent)
-- **Static Analysis:** clang-tidy, clang-format
 
 ### Build Commands
 
@@ -54,6 +56,8 @@ The project includes predefined tasks in `.vscode/tasks.json` that auto-detect p
 - **Clang-Tidy** - Run static analysis
 - **Clang-Format** - Format all source files
 - **Check Format** - Check formatting compliance
+- **CPack: Create Package** - Create distributable ZIP package
+- **Coverage: Generate Report** - Generate HTML code coverage report
 
 ## Coding Standards
 
@@ -109,17 +113,31 @@ tests/
 └── test_main.cpp     # Test cases
 
 tools/
+├── DevShell.ps1        # Windows dev environment setup
 ├── clang-tidy.sh/ps1   # Static analysis
 ├── clang-format.sh/ps1 # Code formatting
-└── check-format.sh/ps1 # Format checking
+├── check-format.sh/ps1 # Format checking
+└── coverage.sh/ps1     # Code coverage reports
+
+dist/                   # CPack output (gitignored)
+coverage/               # Coverage reports (gitignored)
 ```
+## Engineering Workflow
+- When making changes to the project structure, scripts (.sh or .ps1), clang files (.clang-format, .clang-tidy, .clangd), or CMake files, update README.md accordingly and copilot-instructions.md if needed and ensure setup scripts and workflow.yml files reflect changes.
+- if new folders are created under the project root, make sure to make a smart choice to .gitignore them if needed and exclude them from clangd, clang-format and clang-tidy configurations.
+- When adding a new component or depency ensure to use CMake FetchContent where possible and document the addition in README.md, and update setup scripts, project scripts, readmes, workflow.yml files as needed, and copilot-instructions.md if needed. Also update clangd, clang-format and clang-tidy configurations to exclude the new dependency if needed. 
 
 ## Testing
 
 ### Test Framework
 - Use **Google Test (gtest)** for all tests
 - Tests live in `tests/` directory
-- Run via `ctest --test-dir build/debug`
+- Run via `ctest --preset debug`
+
+### Code Coverage
+- Run `./tools/coverage.sh` to generate HTML coverage report
+- Report generated at `coverage/index.html`
+- Uses llvm-cov with Clang instrumentation
 
 ### Example Test Structure
 ```cpp

@@ -16,7 +16,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y ninja-build clang lld ccache
+        sudo apt-get install -y ninja-build clang clang-tidy clang-format lld ccache llvm
     
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -74,3 +74,49 @@ jobs:
     
     - name: Check formatting
       run: ./tools/check-format.sh
+
+  static-analysis:
+    runs-on: ubuntu-24.04
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ninja-build clang clang-tidy lld ccache
+    
+    - name: Setup ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: linux-tidy
+        max-size: 500M
+    
+    - name: Run clang-tidy
+      run: ./tools/clang-tidy.sh debug
+
+  coverage:
+    runs-on: ubuntu-24.04
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ninja-build clang clang-tidy clang-format lld llvm ccache
+    
+    - name: Setup ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: linux-coverage
+        max-size: 500M
+    
+    - name: Generate coverage report
+      run: ./tools/coverage.sh -v
+    
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage/

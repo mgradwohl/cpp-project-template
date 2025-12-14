@@ -325,6 +325,29 @@
 				"panel": "shared",
 				"clear": true
 			}
+		},
+		{
+			"label": "Coverage: Generate Report",
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/coverage.sh",
+			"args": [
+				"-v"
+			],
+			"windows": {
+				"command": "pwsh",
+				"args": [
+					"-File",
+					"${workspaceFolder}/tools/coverage.ps1",
+					"-ShowDetails"
+				]
+			},
+			"group": "test",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			}
 		}
 	]
 }

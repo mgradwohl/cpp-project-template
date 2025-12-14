@@ -44,3 +44,14 @@ Completion:
   HeaderInsertion: IWYU
   AllScopes: true
   CodePatterns: All
+
+# Suppress diagnostics for build directory and dependencies
+---
+If:
+  PathMatch:
+    - .*/build/.*
+    - .*/_deps/.*
+    - .*/dist/.*
+    - .*/coverage/.*
+Diagnostics:
+  Suppress: '*'

@@ -12,6 +12,11 @@
 # CPack output
 /dist/
 
+# Coverage output
+/coverage/
+*.profraw
+*.profdata
+
 # CMake artifacts
 CMakeCache.txt
 CMakeFiles/

@@ -19,7 +19,7 @@ WarningsAsErrors: ''
 SystemHeaders: false
 
 # Only report warnings for headers directly under src/ or tests/ (not in build/).
-HeaderFilterRegex: '^(?!.*(/|^)(build|_deps|vcpkg|llvm)/).*(/|^)(src|tests)/.*\.(h|hpp|hh|hxx|inl|ipp)$'
+HeaderFilterRegex: '^(?!.*(/|^)(build|_deps|vcpkg|llvm|dist|coverage)/).*(/|^)(src|tests)/.*\.(h|hpp|hh|hxx|inl|ipp)$'
 
 FormatStyle: file
 
@@ -27,4 +27,4 @@ FormatStyle: file
 CheckOptions:
   - key: misc-include-cleaner.IgnoreHeaders
     value: >-
-      (.*/spdlog/.*|.*/vcpkg/.*|.*/gtest/.*|.*/gmock/.*)
+      (.*/build/.*|.*/_deps/.*|.*/dist/.*|.*/coverage/.*|.*/spdlog/.*|.*/vcpkg/.*|.*/gtest/.*|.*/gmock/.*)

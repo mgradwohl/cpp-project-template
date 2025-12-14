@@ -106,6 +106,17 @@
             }
         },
         {
+            "name": "coverage",
+            "displayName": "Coverage",
+            "description": "Debug build with code coverage instrumentation",
+            "inherits": "linux-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "MYPROJECT_ENABLE_COVERAGE": "ON",
+                "MYPROJECT_ENABLE_PCH": "OFF"
+            }
+        },
+        {
             "name": "win-debug",
             "displayName": "Windows Debug",
             "description": "Debug build for Windows",
@@ -149,6 +160,18 @@
                 "CMAKE_SHARED_LINKER_FLAGS_RELEASE": "-s",
                 "CMAKE_CXX_FLAGS_RELEASE": "-O3 -DNDEBUG -march=x86-64-v3 -fomit-frame-pointer"
             }
+        },
+        {
+            "name": "win-coverage",
+            "displayName": "Windows Coverage",
+            "description": "Debug build with code coverage instrumentation",
+            "inherits": "windows-base",
+            "binaryDir": "${sourceDir}/build/win-coverage",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "MYPROJECT_ENABLE_COVERAGE": "ON",
+                "MYPROJECT_ENABLE_PCH": "OFF"
+            }
         }
     ],
     "buildPresets": [
@@ -173,6 +196,11 @@
             "configurePreset": "optimized"
         },
         {
+            "name": "coverage",
+            "displayName": "Coverage",
+            "configurePreset": "coverage"
+        },
+        {
             "name": "win-debug",
             "displayName": "Windows Debug",
             "configurePreset": "win-debug"
@@ -191,6 +219,11 @@
             "name": "win-optimized",
             "displayName": "Windows Optimized",
             "configurePreset": "win-optimized"
+        },
+        {
+            "name": "win-coverage",
+            "displayName": "Windows Coverage",
+            "configurePreset": "win-coverage"
         }
     ],
     "testPresets": [
@@ -227,6 +260,14 @@
             }
         },
         {
+            "name": "coverage",
+            "displayName": "Coverage Tests",
+            "configurePreset": "coverage",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
             "name": "win-debug",
             "displayName": "Windows Debug Tests",
             "configurePreset": "win-debug",
@@ -254,6 +295,14 @@
             "name": "win-optimized",
             "displayName": "Windows Optimized Tests",
             "configurePreset": "win-optimized",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "win-coverage",
+            "displayName": "Windows Coverage Tests",
+            "configurePreset": "win-coverage",
             "output": {
                 "outputOnFailure": true
             }

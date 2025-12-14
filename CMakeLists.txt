@@ -26,6 +26,7 @@ option(MYPROJECT_ENABLE_WARNINGS "Enable extra compiler warnings" ON)
 option(MYPROJECT_BUILD_TESTS "Build tests" ON)
 option(MYPROJECT_ENABLE_PCH "Enable precompiled headers" ON)
 option(MYPROJECT_ENABLE_CCACHE "Enable compiler caching (ccache/sccache)" ON)
+option(MYPROJECT_ENABLE_COVERAGE "Enable code coverage instrumentation" OFF)
 
 # Compiler caching (ccache/sccache) - required for development
 if(MYPROJECT_ENABLE_CCACHE)
@@ -44,6 +45,18 @@ if(MYPROJECT_ENABLE_CCACHE)
             "  Linux: sudo apt install ccache\n"
             "  macOS: brew install ccache\n"
             "  Windows: choco install ccache OR scoop install ccache")
+    endif()
+endif()
+
+# Code coverage support (Clang only)
+if(MYPROJECT_ENABLE_COVERAGE)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        message(STATUS "Code coverage enabled")
+        add_compile_options(-fprofile-instr-generate -fcoverage-mapping)
+        add_link_options(-fprofile-instr-generate -fcoverage-mapping)
+    else()
+        message(WARNING "Code coverage is only supported with Clang. Disabling coverage.")
+        set(MYPROJECT_ENABLE_COVERAGE OFF)
     endif()
 endif()
 
