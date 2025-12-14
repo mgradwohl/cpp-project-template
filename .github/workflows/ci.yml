@@ -7,7 +7,37 @@ on:
     branches: [ main ]
 
 jobs:
+  validate-environment:
+    runs-on: ubuntu-24.04
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install LLVM 21
+      run: |
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 21
+        sudo apt-get install -y ninja-build ccache clang-format-21 clang-tidy-21
+        # Set up alternatives
+        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-21 100
+        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-21 100
+        sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-21 100
+        sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-21 100
+        sudo update-alternatives --install /usr/bin/lld lld /usr/bin/lld-21 100
+        sudo update-alternatives --install /usr/bin/ld.lld ld.lld /usr/bin/ld.lld-21 100
+        sudo update-alternatives --install /usr/bin/llvm-profdata llvm-profdata /usr/bin/llvm-profdata-21 100
+        sudo update-alternatives --install /usr/bin/llvm-cov llvm-cov /usr/bin/llvm-cov-21 100
+        sudo update-alternatives --set clang /usr/bin/clang-21
+        sudo update-alternatives --set clang++ /usr/bin/clang++-21
+        sudo update-alternatives --set clang-format /usr/bin/clang-format-21
+        sudo update-alternatives --set clang-tidy /usr/bin/clang-tidy-21
+    
+    - name: Validate prerequisites
+      run: ./tools/check-prereqs.sh
+
   build-linux:
+    needs: validate-environment
     runs-on: ubuntu-24.04
     
     steps:
@@ -47,6 +77,7 @@ jobs:
       run: ctest --preset debug
 
   build-windows:
+    needs: validate-environment
     runs-on: windows-latest
     
     steps:
@@ -75,6 +106,7 @@ jobs:
       run: ctest --preset win-debug
 
   format-check:
+    needs: validate-environment
     runs-on: ubuntu-24.04
     
     steps:
@@ -93,6 +125,7 @@ jobs:
       run: ./tools/check-format.sh
 
   static-analysis:
+    needs: validate-environment
     runs-on: ubuntu-24.04
     
     steps:
@@ -128,6 +161,7 @@ jobs:
       run: ./tools/clang-tidy.sh debug
 
   coverage:
+    needs: validate-environment
     runs-on: ubuntu-24.04
     
     steps:
