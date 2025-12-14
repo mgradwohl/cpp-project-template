@@ -144,6 +144,7 @@ The script:
 │   └── test_main.cpp       # Example tests
 ├── tools/
 │   ├── DevShell.ps1        # Windows dev environment setup
+│   ├── check-prereqs.sh/ps1 # Check prerequisite tools and versions
 │   ├── clang-tidy.sh/ps1   # Static analysis
 │   ├── clang-format.sh/ps1 # Code formatting
 │   ├── check-format.sh/ps1 # Format checking
@@ -179,6 +180,7 @@ Available tasks:
 - CMake: Configure/Build Debug, RelWithDebInfo, Release, Optimized
 - CMake: Test Debug
 - Clang-Tidy, Clang-Format, Check Format
+- Check Prerequisites
 
 ### Debugging
 
@@ -211,6 +213,8 @@ Available as CMake presets (use `cmake --list-presets` to see all):
 ```bash
 ./tools/clang-tidy.sh debug    # Run clang-tidy
 ```
+
+> **Note:** The build uses precompiled headers (PCH) for faster compilation. Since PCH files are compiler-version-specific, the clang-tidy target automatically strips PCH flags from the compile commands. This allows clang-tidy to work even if its version differs from the compiler version.
 
 ### Code Coverage
 

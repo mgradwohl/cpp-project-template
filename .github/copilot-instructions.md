@@ -58,6 +58,7 @@ The project includes predefined tasks in `.vscode/tasks.json` that auto-detect p
 - **Check Format** - Check formatting compliance
 - **CPack: Create Package** - Create distributable ZIP package
 - **Coverage: Generate Report** - Generate HTML code coverage report
+- **Check Prerequisites** - Verify all required tools are installed with correct versions
 
 ## Coding Standards
 
@@ -68,6 +69,13 @@ The project includes predefined tasks in `.vscode/tasks.json` that auto-detect p
   - Run `./tools/clang-format.sh` before commits
 - **Static Analysis:** Use `.clang-tidy` configuration
   - Run `./tools/clang-tidy.sh` regularly
+  - Note: PCH flags are automatically stripped from compile_commands.json for clang-tidy compatibility
+
+### IDE Configuration (clangd)
+The `.clangd` file configures clangd for IDE integration:
+- Adds project-specific flags and system header prefixes
+- **Removes PCH flags** (`-Xclang`, `-include-pch`, `-emit-pch`, etc.) that clangd cannot handle
+- This does NOT disable PCH in builds - only tells clangd to ignore those flags
 
 ### Include Order
 
@@ -115,6 +123,7 @@ tests/
 
 tools/
 ├── DevShell.ps1        # Windows dev environment setup
+├── check-prereqs.sh/ps1  # Check prerequisite tools and versions
 ├── clang-tidy.sh/ps1   # Static analysis
 ├── clang-format.sh/ps1 # Code formatting
 ├── check-format.sh/ps1 # Format checking

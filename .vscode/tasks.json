@@ -348,6 +348,25 @@
 				"panel": "shared",
 				"clear": true
 			}
+		},
+		{
+			"label": "Check Prerequisites",
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/check-prereqs.sh",
+			"windows": {
+				"command": "pwsh",
+				"args": [
+					"-File",
+					"${workspaceFolder}/tools/check-prereqs.ps1"
+				]
+			},
+			"group": "test",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			}
 		}
 	]
 }

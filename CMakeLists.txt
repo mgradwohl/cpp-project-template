@@ -150,17 +150,35 @@ set(MYPROJECT_HEADERS
 )
 
 if(CLANG_TIDY_EXE)
+    # Generate a PCH-free compile_commands.json for clang-tidy
+    # This avoids version mismatch issues between compiler and clang-tidy
+    add_custom_target(generate-clang-tidy-compile-commands
+        COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_BINARY_DIR}/compile_commands.json
+            ${CMAKE_BINARY_DIR}/compile_commands.json.bak
+        COMMAND sed -i
+            -e "s/-Xclang -include-pch -Xclang [^ ]*\\.pch//g"
+            -e "s/-Xclang -emit-pch//g"
+            -e "s/-Xclang -include -Xclang [^ ]*cmake_pch[^ ]*//g"
+            -e "s/-Winvalid-pch//g"
+            -e "s/-fpch-instantiate-templates//g"
+            ${CMAKE_BINARY_DIR}/compile_commands.json
+        DEPENDS ${CMAKE_BINARY_DIR}/compile_commands.json
+        COMMENT "Stripping PCH flags from compile_commands.json for clang-tidy"
+    )
+
     add_custom_target(run-clang-tidy
         COMMAND ${CLANG_TIDY_EXE}
             --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy
             -p ${CMAKE_BINARY_DIR}
             --extra-arg=-std=c++23
+            --extra-arg=-Wno-unknown-warning-option
             ${MYPROJECT_SOURCES}
             ${MYPROJECT_HEADERS}
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         COMMENT "Running clang-tidy on project sources"
     )
-    add_dependencies(run-clang-tidy copy-compile-commands)
+    add_dependencies(run-clang-tidy generate-clang-tidy-compile-commands copy-compile-commands)
 endif()
 
 if(CLANG_FORMAT_EXE)

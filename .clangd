@@ -12,7 +12,6 @@ CompileFlags:
     - --system-header-prefix=spdlog/
     - --system-header-prefix=gtest/
     - --system-header-prefix=gmock/
-    - --system-header-prefix=vcpkg
 
     # Warnings while parsing
     - -Wall
@@ -20,6 +19,14 @@ CompileFlags:
     - -Wpedantic
     - -Wconversion
     - -Wsign-conversion
+
+  # Remove PCH flags that clangd doesn't support
+  Remove:
+    - -Xclang
+    - -emit-pch
+    - -include-pch
+    - -fpch-*
+    - -Winvalid-pch
 
 Diagnostics:
   # Let clangd run clang-tidy using your .clang-tidy config.
