@@ -113,6 +113,8 @@ Separate each group with a blank line. Use `#pragma once` in all headers.
 ## Project Structure
 
 ```
+Devshell-Updated.ps1  # Windows dev environment setup (in project root)
+
 src/
 ├── main.cpp          # Application entry point
 └── version.h.in      # Version header template (CMake generates version.h)
@@ -122,7 +124,8 @@ tests/
 └── test_main.cpp     # Test cases
 
 tools/
-├── DevShell.ps1        # Windows dev environment setup
+├── build.sh/ps1        # Build helper scripts
+├── configure.sh/ps1    # Configure helper scripts
 ├── check-prereqs.sh/ps1  # Check prerequisite tools and versions
 ├── clang-tidy.sh/ps1   # Static analysis
 ├── clang-format.sh/ps1 # Code formatting

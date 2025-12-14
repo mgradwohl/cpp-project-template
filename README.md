@@ -116,18 +116,19 @@ sudo apt install clang-21 clang-tidy-21 clang-format-21 lld-21 llvm-21 cmake nin
 
 #### Windows Development Environment
 
-For Windows builds, you need the `LLVM_ROOT` environment variable set. Use the provided DevShell script to set up your environment:
+For Windows builds, you need the `LLVM_ROOT` environment variable set and Visual Studio Developer Shell loaded. Use the provided DevShell script to set up your environment:
 
 ```powershell
 # Load development environment (sets LLVM_ROOT, loads VS DevShell)
-. .\tools\DevShell.ps1
-
+. .\Devshell-Updated.ps1
+```
 
 The script:
 - Loads Visual Studio Developer Shell
 - Sets `LLVM_ROOT` environment variable
 - Adds LLVM and CMake to PATH
-- Verifies all required tools are available
+
+> **Note:** You may need to update the paths in `Devshell-Updated.ps1` to match your Visual Studio installation.
 
 ## Project Structure
 
@@ -135,6 +136,7 @@ The script:
 .
 ├── CMakeLists.txt          # Main build configuration
 ├── CMakePresets.json       # CMake presets for all platforms/configs
+├── Devshell-Updated.ps1    # Windows dev environment setup
 ├── setup.sh / setup.ps1    # Project renaming scripts (deleted after use)
 ├── src/
 │   ├── main.cpp            # Application entry point
@@ -143,7 +145,8 @@ The script:
 │   ├── CMakeLists.txt      # Test configuration
 │   └── test_main.cpp       # Example tests
 ├── tools/
-│   ├── DevShell.ps1        # Windows dev environment setup
+│   ├── build.sh/ps1        # Build helper scripts
+│   ├── configure.sh/ps1    # Configure helper scripts
 │   ├── check-prereqs.sh/ps1 # Check prerequisite tools and versions
 │   ├── clang-tidy.sh/ps1   # Static analysis
 │   ├── clang-format.sh/ps1 # Code formatting
