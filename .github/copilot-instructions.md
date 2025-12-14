@@ -165,7 +165,19 @@ TEST(MyClassTest, BasicFunctionality)
 
 ### Adding Dependencies
 - Use CMake `FetchContent` for header-only libraries (see spdlog example in CMakeLists.txt)
+- **Always use `SYSTEM` keyword** in `FetchContent_Declare` to suppress warnings from third-party code
 - Update CMakeLists.txt and document in README.md
+
+**Example:**
+```cmake
+FetchContent_Declare(
+    mylib
+    GIT_REPOSITORY https://github.com/example/mylib.git
+    GIT_TAG v1.0.0
+    SYSTEM  # Treat as system headers to suppress warnings
+)
+FetchContent_MakeAvailable(mylib)
+```
 
 ## Best Practices
 

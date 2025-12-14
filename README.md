@@ -284,13 +284,14 @@ The header is generated to `build/<preset>/generated/version.h` and provides bot
 
 ## Adding Dependencies
 
-Use CMake's `FetchContent` for header-only or source-based dependencies:
+Use CMake's `FetchContent` for header-only or source-based dependencies. Always use `SYSTEM` to suppress compiler warnings from third-party code:
 
 ```cmake
 FetchContent_Declare(
     mylib
     GIT_REPOSITORY https://github.com/example/mylib.git
     GIT_TAG v1.0.0
+    SYSTEM  # Treat as system headers to suppress warnings
 )
 FetchContent_MakeAvailable(mylib)
 ```
