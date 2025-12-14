@@ -24,6 +24,12 @@ jobs:
         sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-21 100
         sudo update-alternatives --install /usr/bin/lld lld /usr/bin/lld-21 100
         sudo update-alternatives --install /usr/bin/ld.lld ld.lld /usr/bin/ld.lld-21 100
+        # Explicitly set the alternatives (in case older version was already registered)
+        sudo update-alternatives --set clang /usr/bin/clang-21
+        sudo update-alternatives --set clang++ /usr/bin/clang++-21
+        # Verify versions
+        clang --version
+        clang++ --version
     
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -79,6 +85,8 @@ jobs:
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
         sudo ./llvm.sh 21
+        # clang-format-21 is in clang-format-21 package (not installed by default llvm.sh)
+        sudo apt-get install -y clang-format-21
         sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-21 100
     
     - name: Check formatting
@@ -95,12 +103,20 @@ jobs:
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
         sudo ./llvm.sh 21
-        sudo apt-get install -y ninja-build ccache
+        # clang-tidy-21 is in clang-tidy-21 package (not installed by default llvm.sh)
+        sudo apt-get install -y ninja-build ccache clang-tidy-21
         sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-21 100
         sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-21 100
         sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-21 100
         sudo update-alternatives --install /usr/bin/lld lld /usr/bin/lld-21 100
         sudo update-alternatives --install /usr/bin/ld.lld ld.lld /usr/bin/ld.lld-21 100
+        # Explicitly set the alternatives
+        sudo update-alternatives --set clang /usr/bin/clang-21
+        sudo update-alternatives --set clang++ /usr/bin/clang++-21
+        sudo update-alternatives --set clang-tidy /usr/bin/clang-tidy-21
+        # Verify versions
+        clang --version
+        clang-tidy --version
     
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -123,12 +139,19 @@ jobs:
         chmod +x llvm.sh
         sudo ./llvm.sh 21
         sudo apt-get install -y ninja-build ccache
+        # Set up alternatives so clang/clang++ point to version 21
         sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-21 100
         sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-21 100
         sudo update-alternatives --install /usr/bin/lld lld /usr/bin/lld-21 100
         sudo update-alternatives --install /usr/bin/ld.lld ld.lld /usr/bin/ld.lld-21 100
         sudo update-alternatives --install /usr/bin/llvm-profdata llvm-profdata /usr/bin/llvm-profdata-21 100
         sudo update-alternatives --install /usr/bin/llvm-cov llvm-cov /usr/bin/llvm-cov-21 100
+        # Explicitly set the alternatives (in case older version was already registered)
+        sudo update-alternatives --set clang /usr/bin/clang-21
+        sudo update-alternatives --set clang++ /usr/bin/clang++-21
+        # Verify versions
+        clang --version
+        clang++ --version
     
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
