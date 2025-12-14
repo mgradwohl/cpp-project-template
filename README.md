@@ -6,6 +6,7 @@ A modern C++23 project template with clang toolchain, CMake Presets, Google Test
 
 - **Modern C++23** with clang as the primary compiler
 - **CMake 3.28+** build system with CMake Presets and Ninja
+- **Auto-generated version header** with version, build type, compiler, and timestamp
 - **Precompiled headers** for faster compilation
 - **Compiler caching** via ccache/sccache for faster rebuilds
 - **Code coverage** with llvm-cov and HTML reports
@@ -136,7 +137,8 @@ The script:
 ├── CMakePresets.json       # CMake presets for all platforms/configs
 ├── setup.sh / setup.ps1    # Project renaming scripts (deleted after use)
 ├── src/
-│   └── main.cpp            # Application entry point
+│   ├── main.cpp            # Application entry point
+│   └── version.h.in        # Version header template (generates version.h)
 ├── tests/
 │   ├── CMakeLists.txt      # Test configuration
 │   └── test_main.cpp       # Example tests
@@ -261,6 +263,24 @@ Supported generators:
 | `NSIS` | Windows | .exe installer |
 
 Packages are created in `dist/` with the naming format: `ProjectName-Version-Platform.ext`
+
+## Version Header
+
+The project auto-generates a `version.h` header at configure time with:
+- Project version (from CMakeLists.txt)
+- Build type (Debug, Release, etc.)
+- Compiler ID and version
+- Build timestamp (`__DATE__` and `__TIME__`)
+
+Usage:
+```cpp
+#include "version.h"
+
+spdlog::info("{} v{}", myproject::Version::PROJECT_NAME, myproject::Version::STRING);
+spdlog::debug("Built: {} {}", myproject::Version::BUILD_DATE, myproject::Version::BUILD_TIME);
+```
+
+The header is generated to `build/<preset>/generated/version.h` and provides both C macros (`MYPROJECT_VERSION`) and a C++ namespace (`myproject::Version`).
 
 ## Adding Dependencies
 

@@ -2,6 +2,8 @@
 #include <windows.h>
 #endif
 
+#include "version.h"
+
 #include <spdlog/common.h>
 #include <spdlog/spdlog.h>
 
@@ -11,12 +13,6 @@
 #endif
 
 #include <cstdio>
-
-#ifndef MYPROJECT_VERSION
-// Do not change to constexpr, this is set and passed in by the build system
-// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define MYPROJECT_VERSION "0.0.0-dev"
-#endif
 
 auto main() -> int
 {
@@ -47,7 +43,9 @@ auto main() -> int
     spdlog::flush_on(spdlog::level::debug);
 #endif
 
-    spdlog::info("MyProject v{}", MYPROJECT_VERSION);
+    spdlog::info("{} v{} ({} build)", myproject::Version::PROJECT_NAME, myproject::Version::STRING, myproject::Version::BUILD_TYPE);
+    spdlog::debug("Compiler: {} {}", myproject::Version::COMPILER_ID, myproject::Version::COMPILER_VERSION);
+    spdlog::debug("Built: {} {}", myproject::Version::BUILD_DATE, myproject::Version::BUILD_TIME);
     // clang doesn't support std::println yet so we're using printf for now
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg, modernize-use-std-print)
     std::printf("Hello, World!\n");

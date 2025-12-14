@@ -132,6 +132,15 @@ if(TARGET spdlog)
     target_compile_definitions(spdlog PUBLIC SPDLOG_USE_STD_FORMAT $<$<PLATFORM_ID:Windows>:_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING>)
 endif()
 
+# Generate version header from template
+string(TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
+string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/version.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/generated/version.h
+    @ONLY
+)
+
 set(MYPROJECT_SOURCES
     src/main.cpp
 )
@@ -201,13 +210,12 @@ endif()
 
 target_include_directories(MyProject PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_BINARY_DIR}/generated
 )
 
 target_link_libraries(MyProject PRIVATE
     spdlog::spdlog_header_only
 )
-
-target_compile_definitions(MyProject PRIVATE MYPROJECT_VERSION="${PROJECT_VERSION}")
 
 install(TARGETS MyProject
     BUNDLE DESTINATION .

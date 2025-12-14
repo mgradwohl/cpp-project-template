@@ -106,7 +106,8 @@ Separate each group with a blank line. Use `#pragma once` in all headers.
 
 ```
 src/
-└── main.cpp          # Application entry point
+├── main.cpp          # Application entry point
+└── version.h.in      # Version header template (CMake generates version.h)
 
 tests/
 ├── CMakeLists.txt    # Test configuration

@@ -45,7 +45,7 @@ Completion:
   AllScopes: true
   CodePatterns: All
 
-# Suppress diagnostics for build directory and dependencies
+# Suppress diagnostics for build directory, dependencies, and CMake templates
 ---
 If:
   PathMatch:
@@ -53,5 +53,6 @@ If:
     - .*/_deps/.*
     - .*/dist/.*
     - .*/coverage/.*
+    - .*\.in$
 Diagnostics:
   Suppress: '*'
