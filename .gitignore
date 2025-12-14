@@ -9,6 +9,9 @@
 /optimized/
 /.cache/
 
+# CPack output
+/dist/
+
 # CMake artifacts
 CMakeCache.txt
 CMakeFiles/

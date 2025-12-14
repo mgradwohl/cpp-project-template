@@ -8,6 +8,7 @@ A modern C++23 project template with clang toolchain, CMake Presets, Google Test
 - **CMake 3.28+** build system with CMake Presets and Ninja
 - **Precompiled headers** for faster compilation
 - **Compiler caching** via ccache/sccache for faster rebuilds
+- **GNUInstallDirs** for portable installation paths
 - **Google Test** for unit testing
 - **spdlog** for logging (via FetchContent)
 - **clang-tidy** and **clang-format** integration

@@ -298,6 +298,33 @@
 				"panel": "shared",
 				"clear": true
 			}
+		},
+		{
+			"label": "CPack: Create Package",
+			"type": "shell",
+			"command": "cpack",
+			"args": [
+				"--config",
+				"${workspaceFolder}/build/release/CPackConfig.cmake",
+				"-G",
+				"ZIP"
+			],
+			"windows": {
+				"args": [
+					"--config",
+					"${workspaceFolder}/build/win-release/CPackConfig.cmake",
+					"-G",
+					"ZIP"
+				]
+			},
+			"group": "build",
+			"dependsOn": "CMake: Build Release",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			}
 		}
 	]
 }

@@ -91,6 +91,7 @@ if(MYPROJECT_ENABLE_IPO)
 endif()
 
 include(FetchContent)
+include(GNUInstallDirs)
 set(FETCHCONTENT_TRY_FIND_PACKAGE_MODE ALWAYS)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -197,10 +198,51 @@ target_compile_definitions(MyProject PRIVATE MYPROJECT_VERSION="${PROJECT_VERSIO
 
 install(TARGETS MyProject
     BUNDLE DESTINATION .
-    RUNTIME DESTINATION bin
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
 if(MYPROJECT_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
 endif()
+
+# CPack configuration for packaging
+set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_NAME} - A modern C++23 application")
+set(CPACK_PACKAGE_VENDOR "")
+set(CPACK_PACKAGE_CONTACT "")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
+
+# Output directory for packages
+set(CPACK_PACKAGE_DIRECTORY "${CMAKE_SOURCE_DIR}/dist")
+
+# Archive generators (cross-platform)
+set(CPACK_GENERATOR "ZIP;TGZ")
+
+# Platform-specific generators
+if(WIN32)
+    list(APPEND CPACK_GENERATOR "NSIS")
+    set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
+    set(CPACK_NSIS_MODIFY_PATH ON)
+elseif(APPLE)
+    list(APPEND CPACK_GENERATOR "DragNDrop")
+elseif(UNIX)
+    # Check for dpkg (Debian/Ubuntu)
+    find_program(DPKG_PROGRAM dpkg)
+    if(DPKG_PROGRAM)
+        list(APPEND CPACK_GENERATOR "DEB")
+        set(CPACK_DEBIAN_PACKAGE_MAINTAINER "${CPACK_PACKAGE_CONTACT}")
+        set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
+    endif()
+    # Check for rpmbuild (Red Hat/Fedora)
+    find_program(RPMBUILD_PROGRAM rpmbuild)
+    if(RPMBUILD_PROGRAM)
+        list(APPEND CPACK_GENERATOR "RPM")
+    endif()
+endif()
+
+include(CPack)

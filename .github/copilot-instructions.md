@@ -109,10 +109,9 @@ tests/
 └── test_main.cpp     # Test cases
 
 tools/
-├── configure.sh/ps1  # CMake configure scripts
-├── build.sh/ps1      # Build scripts
-├── clang-tidy.sh/ps1 # Static analysis
-└── clang-format.sh   # Code formatting
+├── clang-tidy.sh/ps1   # Static analysis
+├── clang-format.sh/ps1 # Code formatting
+└── check-format.sh/ps1 # Format checking
 ```
 
 ## Testing
