@@ -13,7 +13,8 @@ MyProject is a cross-platform C++23 application built with modern tooling. The p
 
 ### Required Tools
 - **Compiler:** Clang 17+ with lld linker (21 recommended)
-- **Build System:** CMake 3.26+ with Ninja
+- **Build System:** CMake 3.28+ with Ninja and CMake Presets
+- **Compiler Cache:** ccache 4.9.1+ (required for faster rebuilds)
 - **Testing:** Google Test (via CMake FetchContent)
 - **Logging:** spdlog (via CMake FetchContent)
 - **Static Analysis:** clang-tidy, clang-format
@@ -22,30 +23,37 @@ MyProject is a cross-platform C++23 application built with modern tooling. The p
 
 Configure and build (Linux):
 ```bash
-./tools/configure.sh debug
-./tools/build.sh debug
+cmake --preset debug
+cmake --build --preset debug
 ```
 
 Configure and build (Windows):
 ```powershell
-.\tools\configure.ps1 debug
-.\tools\build.ps1 debug
+cmake --preset win-debug
+cmake --build --preset win-debug
 ```
 
 Run tests:
 ```bash
-ctest --test-dir build/debug --output-on-failure
+ctest --preset debug        # Linux
+ctest --preset win-debug    # Windows
+```
+
+List available presets:
+```bash
+cmake --list-presets
 ```
 
 ### VS Code Tasks
-The project includes predefined tasks in `.vscode/tasks.json`:
-- **Build Debug (Linux/Windows)** - Build with debug symbols (default)
-- **Build RelWithDebInfo** - Build with optimizations + debug info
-- **Build Release** - Build optimized release version
-- **Build Optimized** - Build with LTO, march=x86-64-v3, stripped
+The project includes predefined tasks in `.vscode/tasks.json` that auto-detect platform:
+- **CMake: Build Debug** - Build with debug symbols (default, Ctrl+Shift+B)
+- **CMake: Build RelWithDebInfo** - Build with optimizations + debug info
+- **CMake: Build Release** - Build optimized release version
+- **CMake: Build Optimized** - Build with LTO, march=x86-64-v3, stripped
+- **CMake: Test Debug** - Execute test suite
 - **Clang-Tidy** - Run static analysis
 - **Clang-Format** - Format all source files
-- **Run Tests** - Execute test suite
+- **Check Format** - Check formatting compliance
 
 ## Coding Standards
 

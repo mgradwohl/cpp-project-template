@@ -24,6 +24,28 @@ endif()
 option(MYPROJECT_ENABLE_IPO "Enable interprocedural optimization" ON)
 option(MYPROJECT_ENABLE_WARNINGS "Enable extra compiler warnings" ON)
 option(MYPROJECT_BUILD_TESTS "Build tests" ON)
+option(MYPROJECT_ENABLE_PCH "Enable precompiled headers" ON)
+option(MYPROJECT_ENABLE_CCACHE "Enable compiler caching (ccache/sccache)" ON)
+
+# Compiler caching (ccache/sccache) - required for development
+if(MYPROJECT_ENABLE_CCACHE)
+    find_program(CCACHE_PROGRAM ccache)
+    find_program(SCCACHE_PROGRAM sccache)
+    if(SCCACHE_PROGRAM)
+        message(STATUS "Using sccache: ${SCCACHE_PROGRAM}")
+        set(CMAKE_C_COMPILER_LAUNCHER "${SCCACHE_PROGRAM}")
+        set(CMAKE_CXX_COMPILER_LAUNCHER "${SCCACHE_PROGRAM}")
+    elseif(CCACHE_PROGRAM)
+        message(STATUS "Using ccache: ${CCACHE_PROGRAM}")
+        set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+        set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+    else()
+        message(WARNING "Neither ccache nor sccache found. Install ccache for faster rebuilds:\n"
+            "  Linux: sudo apt install ccache\n"
+            "  macOS: brew install ccache\n"
+            "  Windows: choco install ccache OR scoop install ccache")
+    endif()
+endif()
 
 function(myproject_apply_default_warnings target_name)
     if(NOT MYPROJECT_ENABLE_WARNINGS)
@@ -133,6 +155,22 @@ add_executable(MyProject
 )
 
 target_compile_features(MyProject PRIVATE cxx_std_23)
+
+# Precompiled headers
+if(MYPROJECT_ENABLE_PCH)
+    target_precompile_headers(MyProject PRIVATE
+        <string>
+        <vector>
+        <memory>
+        <algorithm>
+        <functional>
+        <optional>
+        <variant>
+        <span>
+        <format>
+        <spdlog/spdlog.h>
+    )
+endif()
 
 myproject_apply_default_warnings(MyProject)
 
