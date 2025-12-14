@@ -269,6 +269,11 @@ echo ""
 # Environment variables
 echo -e "${BOLD}Environment Variables${NC}"
 echo "──────────────────────────────────────────────────────────────────────────"
+if [[ -n "${CMAKE_ROOT:-}" ]]; then
+    echo -e "${GREEN}✓${NC} CMAKE_ROOT      = ${BLUE}$CMAKE_ROOT${NC}"
+else
+    echo -e "${YELLOW}○${NC} CMAKE_ROOT      = ${YELLOW}(not set)${NC}"
+fi
 if [[ -n "${LLVM_ROOT:-}" ]]; then
     echo -e "${GREEN}✓${NC} LLVM_ROOT       = ${BLUE}$LLVM_ROOT${NC}"
 else

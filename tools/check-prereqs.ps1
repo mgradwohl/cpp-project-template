@@ -301,6 +301,17 @@ Write-Host ""
 Write-Host "Environment Variables" -ForegroundColor White
 Write-Host "──────────────────────────────────────────────────────────────────────────"
 
+if ($env:CMAKE_ROOT) {
+    Write-Host "✓ " -ForegroundColor Green -NoNewline
+    Write-Host "CMAKE_ROOT      = " -NoNewline
+    Write-Host $env:CMAKE_ROOT -ForegroundColor Blue
+}
+else {
+    Write-Host "○ " -ForegroundColor Yellow -NoNewline
+    Write-Host "CMAKE_ROOT      = " -NoNewline
+    Write-Host "(not set)" -ForegroundColor Yellow
+}
+
 if ($env:LLVM_ROOT) {
     Write-Host "✓ " -ForegroundColor Green -NoNewline
     Write-Host "LLVM_ROOT       = " -NoNewline
