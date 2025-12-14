@@ -150,7 +150,7 @@ set(MYPROJECT_HEADERS
 )
 
 if(CLANG_TIDY_EXE)
-    # Generate a PCH-free and module-free compile_commands.json for clang-tidy
+    # Generate a PCH-free compile_commands.json for clang-tidy
     # This avoids version mismatch issues between compiler and clang-tidy
     add_custom_target(generate-clang-tidy-compile-commands
         COMMAND ${CMAKE_COMMAND} -E copy
@@ -162,8 +162,6 @@ if(CLANG_TIDY_EXE)
             -e "s/-Xclang -include -Xclang [^ ]*cmake_pch[^ ]*//g"
             -e "s/-Winvalid-pch//g"
             -e "s/-fpch-instantiate-templates//g"
-            -e "s/@CMakeFiles[^ ]*\\.modmap//g"
-            -e "s/-fmodule-output=[^ ]*//g"
             ${CMAKE_BINARY_DIR}/compile_commands.json
         DEPENDS ${CMAKE_BINARY_DIR}/compile_commands.json
         COMMENT "Stripping PCH flags from compile_commands.json for clang-tidy"

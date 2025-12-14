@@ -210,7 +210,6 @@ FetchContent_MakeAvailable(mylib)
 - Write clear commit messages
 - Keep commits focused and atomic
 - Ensure code builds and tests pass before committing
-- Post commit monitor the CI results for issues and address any problems promptly
 
 ## Common Pitfalls to Avoid
 
