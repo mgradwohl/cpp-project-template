@@ -52,6 +52,8 @@ The project includes predefined tasks in `.vscode/tasks.json` that auto-detect p
 - **CMake: Build RelWithDebInfo** - Build with optimizations + debug info
 - **CMake: Build Release** - Build optimized release version
 - **CMake: Build Optimized** - Build with LTO, march=x86-64-v3, stripped
+- **CMake: Build ASan+UBSan (Linux)** - Build with AddressSanitizer + UBSan
+- **CMake: Build TSan (Linux)** - Build with ThreadSanitizer
 - **CMake: Test Debug** - Execute test suite
 - **Clang-Tidy** - Run static analysis
 - **Clang-Format** - Format all source files
@@ -132,6 +134,12 @@ tools/
 ├── check-format.sh/ps1 # Format checking
 └── coverage.sh/ps1     # Code coverage reports
 
+.github/
+├── workflows/ci.yml    # CI/CD pipeline
+├── ISSUE_TEMPLATE/     # Bug report and feature request templates
+├── pull_request_template.md  # PR checklist
+└── dependabot.yml      # Automated dependency updates
+
 dist/                   # CPack output (gitignored)
 coverage/               # Coverage reports (gitignored)
 ```
@@ -139,7 +147,7 @@ coverage/               # Coverage reports (gitignored)
 - When making changes to the project structure, scripts (.sh or .ps1), clang files (.clang-format, .clang-tidy, .clangd), or CMake files, update README.md accordingly and copilot-instructions.md if needed and ensure setup scripts and workflow.yml files reflect changes.
 - if new folders are created under the project root, make sure to make a smart choice to .gitignore them if needed and exclude them from clangd, clang-format and clang-tidy configurations.
 - When adding a new component or depency ensure to use CMake FetchContent where possible and document the addition in README.md, and update setup scripts, project scripts, readmes, workflow.yml files as needed, and copilot-instructions.md if needed. Also update clangd, clang-format and clang-tidy configurations to exclude the new dependency if needed. 
-- If FetchContent downloads need to be reused across presets, enable the shared cache via `MYPROJECT_ENABLE_FETCHCONTENT_CACHE=ON` (optional). The default cache locations are `%LOCALAPPDATA%\cmake-fetchcontent` (Windows) or `~/.cache/cmake-fetchcontent`/`$XDG_CACHE_HOME` (Linux/macOS). Respect a user-specified `MYPROJECT_FETCHCONTENT_CACHE_DIR` when provided.
+- If FetchContent downloads need to be reused across presets, enable the shared cache via `MYPROJECT_ENABLE_FETCHCONTENT_CACHE=ON` (optional). The default cache location is `.cache/fetchcontent` beside the source root (gitignored). Respect a user-specified `MYPROJECT_FETCHCONTENT_CACHE_DIR` or the standard `FETCHCONTENT_BASE_DIR` environment variable when provided.
 
 ## Testing
 

@@ -12,15 +12,14 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #endif
 
-#include <cstdio>
+#include <print>
 
 auto main() -> int
 {
 // Required on Windows to see console output when launching from an IDE or debugger
-// if your Windows applicaiton is a "Console" subsystem application, you can skip this.
 #if defined(_WIN32) && !defined(NDEBUG)
-    // Try to attach to parent console (e.g., when run from terminal).
-    // If no parent console exists (e.g., launched from debugger), create our own.
+    // Try to attach to parent console if it's a console app
+    // If no parent console exists because it's a Windows app create our own console
     if (AttachConsole(ATTACH_PARENT_PROCESS) == 0)
     {
         AllocConsole();
@@ -46,8 +45,7 @@ auto main() -> int
     spdlog::info("{} v{} ({} build)", myproject::Version::PROJECT_NAME, myproject::Version::STRING, myproject::Version::BUILD_TYPE);
     spdlog::debug("Compiler: {} {}", myproject::Version::COMPILER_ID, myproject::Version::COMPILER_VERSION);
     spdlog::debug("Built: {} {}", myproject::Version::BUILD_DATE, myproject::Version::BUILD_TIME);
-    // clang doesn't support std::println yet so we're using printf for now
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg, modernize-use-std-print)
-    std::printf("Hello, World!\n");
+
+    std::println("Hello, World!");
     return 0;
 }

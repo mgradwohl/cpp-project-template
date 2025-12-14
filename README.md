@@ -159,6 +159,12 @@ The script:
 ├── .clang-format           # Formatting rules
 ├── .clang-tidy             # Static analysis rules
 ├── .clangd                 # clangd LSP configuration
+├── .github/
+│   ├── workflows/ci.yml    # CI/CD pipeline
+│   ├── ISSUE_TEMPLATE/     # Bug report and feature request templates
+│   ├── pull_request_template.md  # PR checklist
+│   └── dependabot.yml      # Automated dependency updates
+├── SECURITY.md             # Security policy and vulnerability reporting
 └── .vscode/
     ├── tasks.json          # Build tasks (platform-aware)
     ├── launch.json         # Debug configurations (platform-aware)
@@ -181,6 +187,7 @@ Tasks automatically use the correct preset for your platform (Linux or Windows):
 
 Available tasks:
 - CMake: Configure/Build Debug, RelWithDebInfo, Release, Optimized
+- CMake: Build ASan+UBSan (Linux), Build TSan (Linux)
 - CMake: Test Debug
 - Clang-Tidy, Clang-Format, Check Format
 - Check Prerequisites
@@ -198,11 +205,13 @@ Available as CMake presets (use `cmake --list-presets` to see all):
 
 | Preset (Linux) | Preset (Windows) | Description |
 |----------------|------------------|-------------|
-| `debug` | `win-debug` | Debug symbols, no optimization |
+| `debug` | `win-debug` | Debug symbols, no optimization, security hardening |
 | `relwithdebinfo` | `win-relwithdebinfo` | Debug symbols + optimization |
 | `release` | `win-release` | Optimized, no debug symbols |
 | `optimized` | `win-optimized` | LTO, march=x86-64-v3, stripped |
 | `coverage` | `win-coverage` | Debug + code coverage instrumentation |
+| `asan-ubsan` | — | AddressSanitizer + UBSan (Linux only) |
+| `tsan` | — | ThreadSanitizer (Linux only) |
 
 ## Code Quality Tools
 
@@ -241,6 +250,35 @@ The coverage report shows:
 - Branch coverage for conditional statements
 
 View the report at `coverage/index.html` after generation.
+
+### Sanitizers (Linux only)
+
+Sanitizers catch bugs that unit tests and static analysis miss. Two presets are available:
+
+**AddressSanitizer + UndefinedBehaviorSanitizer** — catches memory errors and undefined behavior:
+```bash
+cmake --preset asan-ubsan
+cmake --build --preset asan-ubsan
+ctest --preset asan-ubsan
+# Or run directly:
+ASAN_OPTIONS=detect_leaks=1 ./build/asan-ubsan/MyProject
+```
+
+**ThreadSanitizer** — catches data races in multithreaded code (cannot combine with ASan):
+```bash
+cmake --preset tsan
+cmake --build --preset tsan
+ctest --preset tsan
+```
+
+Common issues detected:
+| Sanitizer | Detects |
+|-----------|---------|
+| ASan | Buffer overflows, use-after-free, double-free, memory leaks |
+| UBSan | Signed overflow, null pointer dereference, misaligned access |
+| TSan | Data races, deadlocks, thread leaks |
+
+> **Note:** Sanitizers add runtime overhead (~2-5x slower). Use them during development and CI, not in production builds.
 
 ## Packaging with CPack
 
@@ -330,9 +368,20 @@ cmake --preset debug -DMYPROJECT_ENABLE_FETCHCONTENT_CACHE=ON -DMYPROJECT_FETCHC
 This template includes a GitHub Actions workflow (`.github/workflows/ci.yml`) that automatically:
 - Builds on Linux (Ubuntu 24.04) and Windows
 - Runs all tests
+- Runs sanitizers (ASan+UBSan, TSan) on Linux
 - Checks code formatting (clang-format)
 - Runs static analysis (clang-tidy)
 - Generates code coverage reports
+
+**Dependabot** is configured to automatically create PRs for GitHub Actions updates (weekly).
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
+
+- Use the **issue templates** for bug reports and feature requests
+- PRs will be checked against the **PR template** checklist
+- Security issues should be reported per [SECURITY.md](SECURITY.md)
 
 ## License
 

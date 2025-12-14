@@ -99,11 +99,16 @@ Separate each group with a blank line.
 8. Push to the branch (`git push origin feature/amazing-feature`)
 9. Open a Pull Request
 
+The **PR template** will guide you through the checklist. Please complete all applicable items before requesting review.
+
 ## Reporting Issues
 
-When reporting issues, please include:
-- OS and version
-- Compiler version (`clang++ --version`)
-- CMake version (`cmake --version`)
-- Steps to reproduce
-- Expected vs actual behavior
+Please use the appropriate **issue template**:
+- **Bug Report** - For bugs and unexpected behavior
+- **Feature Request** - For new features and improvements
+
+The templates will guide you to include all necessary information.
+
+### Security Issues
+
+For security vulnerabilities, please see [SECURITY.md](SECURITY.md) for responsible disclosure guidelines. **Do not** open public issues for security vulnerabilities.

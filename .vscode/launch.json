@@ -70,6 +70,41 @@
                 "group": "run",
                 "order": 2
             }
+        },
+        {
+            "name": "Debug MyProject (ASan+UBSan) [Linux]",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/asan-ubsan/MyProject",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "CMake: Build ASan+UBSan (Linux)",
+            "terminal": "integrated",
+            "env": {
+                "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=0",
+                "UBSAN_OPTIONS": "print_stacktrace=1"
+            },
+            "presentation": {
+                "group": "sanitizers",
+                "order": 1
+            }
+        },
+        {
+            "name": "Debug MyProject (TSan) [Linux]",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/tsan/MyProject",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "CMake: Build TSan (Linux)",
+            "terminal": "integrated",
+            "env": {
+                "TSAN_OPTIONS": "halt_on_error=0"
+            },
+            "presentation": {
+                "group": "sanitizers",
+                "order": 2
+            }
         }
     ]
 }

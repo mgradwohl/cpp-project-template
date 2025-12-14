@@ -98,6 +98,42 @@
 			}
 		},
 		{
+			"label": "CMake: Configure ASan+UBSan (Linux)",
+			"type": "shell",
+			"command": "cmake",
+			"args": [
+				"--preset",
+				"asan-ubsan"
+			],
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		{
+			"label": "CMake: Configure TSan (Linux)",
+			"type": "shell",
+			"command": "cmake",
+			"args": [
+				"--preset",
+				"tsan"
+			],
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared",
+				"clear": true
+			}
+		},
+		{
 			"label": "CMake: Build Debug",
 			"type": "shell",
 			"command": "cmake",
@@ -205,6 +241,44 @@
 			}
 		},
 		{
+			"label": "CMake: Build ASan+UBSan (Linux)",
+			"type": "shell",
+			"command": "cmake",
+			"args": [
+				"--build",
+				"--preset",
+				"asan-ubsan"
+			],
+			"group": "build",
+			"dependsOn": "CMake: Configure ASan+UBSan (Linux)",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "CMake: Build TSan (Linux)",
+			"type": "shell",
+			"command": "cmake",
+			"args": [
+				"--build",
+				"--preset",
+				"tsan"
+			],
+			"group": "build",
+			"dependsOn": "CMake: Configure TSan (Linux)",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared"
+			}
+		},
+		{
 			"label": "CMake: Test Debug",
 			"type": "shell",
 			"command": "ctest",
@@ -220,6 +294,38 @@
 			},
 			"group": "test",
 			"dependsOn": "CMake: Build Debug",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "CMake: Test ASan+UBSan (Linux)",
+			"type": "shell",
+			"command": "ctest",
+			"args": [
+				"--preset",
+				"asan-ubsan"
+			],
+			"group": "test",
+			"dependsOn": "CMake: Build ASan+UBSan (Linux)",
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "CMake: Test TSan (Linux)",
+			"type": "shell",
+			"command": "ctest",
+			"args": [
+				"--preset",
+				"tsan"
+			],
+			"group": "test",
+			"dependsOn": "CMake: Build TSan (Linux)",
 			"problemMatcher": [],
 			"presentation": {
 				"reveal": "always",
