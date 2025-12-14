@@ -12,8 +12,8 @@ MyProject is a cross-platform C++23 application built with modern tooling. The p
 ## Development Environment
 
 ### Required Tools
-- **Compiler:** Clang 17+ with lld linker (21 recommended)
-- **Build System:** CMake 3.26+ with Ninja
+- **Compiler:** Clang 21+ with lld linker (21 recommended)
+- **Build System:** CMake 3.28+ with Ninja (4.2.1+ recommended)
 - **Testing:** Google Test (via CMake FetchContent)
 - **Logging:** spdlog (via CMake FetchContent)
 - **Static Analysis:** clang-tidy, clang-format
