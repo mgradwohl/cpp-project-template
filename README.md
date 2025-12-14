@@ -280,6 +280,38 @@ Common issues detected:
 
 > **Note:** Sanitizers add runtime overhead (~2-5x slower). Use them during development and CI, not in production builds.
 
+### Compiler Warnings
+
+The project applies a comprehensive set of compiler warnings tuned for Clang on both Windows and Linux. Warnings are applied per-target (not globally) to avoid affecting third-party dependencies.
+
+**Baseline warnings (all platforms):**
+```
+-Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow
+-Wnon-virtual-dtor -Woverloaded-virtual -Wformat=2 -Wimplicit-fallthrough
+-Wnull-dereference -Wdouble-promotion -Wcast-align -Wundef -Werror=return-type
+```
+
+**Linux/macOS additions:**
+```
+-Wmisleading-indentation
+```
+
+**Windows suppressions** (reduces noise from MSVC STL/SDK headers):
+```
+-Wno-unknown-pragmas -Wno-nonportable-system-include-path
+```
+
+**CMake options:**
+| Option | Default | Description |
+|--------|---------|-------------|
+| `MYPROJECT_ENABLE_WARNINGS` | `ON` | Enable all warnings |
+| `MYPROJECT_WARNINGS_AS_ERRORS` | `ON` | Treat warnings as errors (`-Werror`) |
+
+To disable warnings-as-errors for local development:
+```bash
+cmake --preset debug -DMYPROJECT_WARNINGS_AS_ERRORS=OFF
+```
+
 ## Packaging with CPack
 
 Create distributable packages using CPack. Packages are output to the `dist/` folder (gitignored).
@@ -374,6 +406,45 @@ This template includes a GitHub Actions workflow (`.github/workflows/ci.yml`) th
 - Generates code coverage reports
 
 **Dependabot** is configured to automatically create PRs for GitHub Actions updates (weekly).
+
+## Design Decisions
+
+This section documents intentional design choices to help template users understand why certain approaches were taken.
+
+### What This Template Uses
+
+| Choice | Rationale |
+|--------|----------|
+| **CMake Presets** | Single source of truth for all build configurations. No separate toolchain files needed. |
+| **FetchContent** | Simple dependency management built into CMake. No external package manager required. |
+| **Platform default C++ libraries** | libstdc++ on Linux, MSVC STL on Windows. More portable than forcing libc++ everywhere. |
+| **clangd for IDE** | Superior C++ language server. cpptools disabled to avoid conflicts. |
+| **Individual CMake options** | Granular control (e.g., `MYPROJECT_ENABLE_PCH`) rather than umbrella "Developer Mode". |
+
+### Disabled Clang-Tidy Checks
+
+Some checks are disabled in `.clang-tidy` due to false positives or excessive noise:
+
+| Check | Reason |
+|-------|--------|
+| `bugprone-exception-escape` | Traces through spdlog/STL exception paths, creates wall of noise |
+| `misc-include-cleaner` | False positives with Windows headers (`<windows.h>`, `<cstdio>`) |
+| `bugprone-easily-swappable-parameters` | Too opinionated for general use |
+| `modernize-use-trailing-return-type` | Style preference, not a correctness issue |
+| `readability-identifier-naming` | Conflicts with different naming conventions |
+| `readability-identifier-length` | Too restrictive for template code |
+| `readability-magic-numbers` | Too noisy for a template project |
+| `readability-implicit-bool-conversion` | Common C++ idiom |
+| `portability-avoid-pragma-once` | `#pragma once` is the project standard |
+
+### Why Certain Features Are Not Included
+
+| Feature | Reason Not Included |
+|---------|---------------------|
+| **CMake toolchain files** | Presets provide complete build configurations already |
+| **install/export config** | This is an app template, not a library with downstream consumers |
+| **libc++** | Adds complexity; platform defaults work well and are more portable |
+| **CPM.cmake** | FetchContent is sufficient; CPM adds another dependency to manage |
 
 ## Contributing
 

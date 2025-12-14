@@ -73,6 +73,16 @@ The project includes predefined tasks in `.vscode/tasks.json` that auto-detect p
   - Run `./tools/clang-tidy.sh` regularly
   - Note: PCH flags are automatically stripped from compile_commands.json for clang-tidy compatibility
 
+### Compiler Warnings
+The project applies comprehensive warnings tuned for Clang on Windows and Linux:
+
+- **Baseline (all platforms):** `-Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wnon-virtual-dtor -Woverloaded-virtual -Wformat=2 -Wimplicit-fallthrough -Wnull-dereference -Wdouble-promotion -Wcast-align -Wundef -Werror=return-type`
+- **Linux/macOS:** Adds `-Wmisleading-indentation`
+- **Windows:** Adds `-Wno-unknown-pragmas -Wno-nonportable-system-include-path` (suppresses MSVC STL/SDK noise)
+- **Warnings-as-errors:** Controlled by `MYPROJECT_WARNINGS_AS_ERRORS` (default ON)
+
+Warnings are applied per-target via `myproject_apply_default_warnings()` — they do NOT affect third-party dependencies.
+
 ### IDE Configuration (clangd)
 The `.clangd` file configures clangd for IDE integration:
 - Adds project-specific flags and system header prefixes
@@ -231,6 +241,35 @@ FetchContent_MakeAvailable(mylib)
 - Don't skip running tests before committing
 - Don't add unnecessary dependencies
 - Don't commit without running clang-format
+
+## Design Decisions
+
+This section documents intentional design choices and rejected alternatives.
+
+### What We Use
+- **CMake Presets** as the single source of truth for build configurations (not toolchain files)
+- **FetchContent** for dependencies (not CPM.cmake - adds complexity without benefit for this template)
+- **Platform default C++ standard libraries** (libstdc++ on Linux, MSVC STL on Windows - not libc++)
+- **Individual CMake options** for features (not an umbrella "Developer Mode" switch)
+- **clangd** for IDE integration (cpptools disabled to avoid conflicts)
+
+### Disabled Clang-Tidy Checks
+These checks are disabled in `.clang-tidy` due to false positives or excessive noise:
+- `bugprone-exception-escape` - traces through spdlog/STL exception paths, creates wall of noise
+- `misc-include-cleaner` - doesn't work correctly with Windows headers (`<windows.h>`, `<cstdio>`)
+- `bugprone-easily-swappable-parameters` - too opinionated for general use
+- `modernize-use-trailing-return-type` - style preference, not a bug
+- `readability-identifier-naming` - conflicts with different naming conventions
+- `readability-identifier-length` - too restrictive
+- `readability-magic-numbers` - too noisy for a template
+- `readability-implicit-bool-conversion` - common C++ idiom
+- `portability-avoid-pragma-once` - `#pragma once` is the project standard
+
+### Why Not Implemented
+- **Toolchain files:** CMake Presets already provide complete build configurations
+- **install/export config:** This is an app template, not a library - no downstream consumers
+- **libc++:** Adds complexity; platform defaults work well and are more portable
+- **CPM.cmake:** FetchContent is sufficient; CPM adds another dependency to manage
 
 ## When in Doubt
 

@@ -5,6 +5,7 @@
 #include "version.h"
 
 #include <spdlog/common.h>
+#include <spdlog/logger.h>
 #include <spdlog/spdlog.h>
 
 #ifdef _WIN32
@@ -12,6 +13,11 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #endif
 
+#ifdef _WIN32
+#include <cstdio>
+#endif
+
+#include <memory>
 #include <print>
 
 auto main() -> int
@@ -24,8 +30,8 @@ auto main() -> int
     {
         AllocConsole();
         // Redirect stdout/stderr to the new console
-        FILE* out = nullptr;
-        FILE* err = nullptr;
+        FILE* out = nullptr;  // NOLINT(misc-const-correctness)
+        FILE* err = nullptr;  // NOLINT(misc-const-correctness)
         freopen_s(&out, "CONOUT$", "w", stdout);
         freopen_s(&err, "CONOUT$", "w", stderr);
     }

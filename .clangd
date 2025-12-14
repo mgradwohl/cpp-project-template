@@ -20,7 +20,7 @@ CompileFlags:
     - -Wconversion
     - -Wsign-conversion
 
-  # Remove PCH and module flags that clangd doesn't support
+  # Remove PCH, module, and MSVC-specific flags that clangd doesn't support
   Remove:
     - -Xclang
     - -emit-pch
@@ -29,6 +29,7 @@ CompileFlags:
     - -Winvalid-pch
     - -fmodule-output=*
     - "@CMakeFiles*"
+    - --dependent-lib=*
 
 Diagnostics:
   # Let clangd run clang-tidy using your .clang-tidy config.

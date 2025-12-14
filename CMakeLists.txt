@@ -23,6 +23,7 @@ endif()
 
 option(MYPROJECT_ENABLE_IPO "Enable interprocedural optimization" ON)
 option(MYPROJECT_ENABLE_WARNINGS "Enable extra compiler warnings" ON)
+option(MYPROJECT_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
 option(MYPROJECT_BUILD_TESTS "Build tests" ON)
 option(MYPROJECT_ENABLE_PCH "Enable precompiled headers" ON)
 option(MYPROJECT_ENABLE_CCACHE "Enable compiler caching (ccache/sccache)" ON)
@@ -68,16 +69,46 @@ function(myproject_apply_default_warnings target_name)
     endif()
 
     if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
+        # Baseline warnings - high signal, low noise for modern C++
         target_compile_options(${target_name} PRIVATE
             -Wall
             -Wextra
             -Wpedantic
             -Wconversion
+            -Wsign-conversion
+            -Wshadow
+            -Wnon-virtual-dtor
+            -Woverloaded-virtual
+            -Wformat=2
             -Wimplicit-fallthrough
+            -Wnull-dereference
+            -Wdouble-promotion
+            -Wcast-align
+            -Wundef
             -Werror=return-type
+            $<$<BOOL:${MYPROJECT_WARNINGS_AS_ERRORS}>:-Werror>
         )
+
+        # Platform-specific warning adjustments
+        if(WIN32)
+            # Suppress noise from MSVC STL and Windows SDK headers
+            target_compile_options(${target_name} PRIVATE
+                -Wno-unknown-pragmas
+                -Wno-nonportable-system-include-path
+            )
+        else()
+            # Linux/macOS-specific warnings
+            target_compile_options(${target_name} PRIVATE
+                -Wmisleading-indentation
+            )
+        endif()
     elseif(MSVC)
-        target_compile_options(${target_name} PRIVATE /W4 /permissive- /EHsc)
+        target_compile_options(${target_name} PRIVATE
+            /W4
+            /permissive-
+            /EHsc
+            $<$<BOOL:${MYPROJECT_WARNINGS_AS_ERRORS}>:/WX>
+        )
     endif()
 endfunction()
 
@@ -178,22 +209,35 @@ set(MYPROJECT_HEADERS
 if(CLANG_TIDY_EXE)
     # Generate a PCH-free and module-free compile_commands.json for clang-tidy
     # This avoids version mismatch issues between compiler and clang-tidy
-    add_custom_target(generate-clang-tidy-compile-commands
-        COMMAND ${CMAKE_COMMAND} -E copy
-            ${CMAKE_BINARY_DIR}/compile_commands.json
-            ${CMAKE_BINARY_DIR}/compile_commands.json.bak
-        COMMAND sed -i
-            -e "s/-Xclang -include-pch -Xclang [^ ]*\\.pch//g"
-            -e "s/-Xclang -emit-pch//g"
-            -e "s/-Xclang -include -Xclang [^ ]*cmake_pch[^ ]*//g"
-            -e "s/-Winvalid-pch//g"
-            -e "s/-fpch-instantiate-templates//g"
-            -e "s/@CMakeFiles[^ ]*\\.modmap//g"
-            -e "s/-fmodule-output=[^ ]*//g"
-            ${CMAKE_BINARY_DIR}/compile_commands.json
-        DEPENDS ${CMAKE_BINARY_DIR}/compile_commands.json
-        COMMENT "Stripping PCH flags from compile_commands.json for clang-tidy"
-    )
+    # Use platform-appropriate tools: sed on Unix, PowerShell on Windows
+    if(WIN32)
+        add_custom_target(generate-clang-tidy-compile-commands
+            COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_BINARY_DIR}/compile_commands.json
+                ${CMAKE_BINARY_DIR}/compile_commands.json.bak
+            COMMAND powershell -NoProfile -Command
+                "(Get-Content '${CMAKE_BINARY_DIR}/compile_commands.json' -Raw) -replace '-Xclang -include-pch -Xclang [^ ]*\\.pch', '' -replace '-Xclang -emit-pch', '' -replace '-Xclang -include -Xclang [^ ]*cmake_pch[^ ]*', '' -replace '-Winvalid-pch', '' -replace '-fpch-instantiate-templates', '' -replace '@CMakeFiles[^ ]*\\.modmap', '' -replace '-fmodule-output=[^ ]*', '' | Set-Content '${CMAKE_BINARY_DIR}/compile_commands.json' -NoNewline"
+            DEPENDS ${CMAKE_BINARY_DIR}/compile_commands.json
+            COMMENT "Stripping PCH flags from compile_commands.json for clang-tidy"
+        )
+    else()
+        add_custom_target(generate-clang-tidy-compile-commands
+            COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_BINARY_DIR}/compile_commands.json
+                ${CMAKE_BINARY_DIR}/compile_commands.json.bak
+            COMMAND sed -i
+                -e "s/-Xclang -include-pch -Xclang [^ ]*\\.pch//g"
+                -e "s/-Xclang -emit-pch//g"
+                -e "s/-Xclang -include -Xclang [^ ]*cmake_pch[^ ]*//g"
+                -e "s/-Winvalid-pch//g"
+                -e "s/-fpch-instantiate-templates//g"
+                -e "s/@CMakeFiles[^ ]*\\.modmap//g"
+                -e "s/-fmodule-output=[^ ]*//g"
+                ${CMAKE_BINARY_DIR}/compile_commands.json
+            DEPENDS ${CMAKE_BINARY_DIR}/compile_commands.json
+            COMMENT "Stripping PCH flags from compile_commands.json for clang-tidy"
+        )
+    endif()
 
     add_custom_target(run-clang-tidy
         COMMAND ${CLANG_TIDY_EXE}

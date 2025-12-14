@@ -2,7 +2,6 @@
 
 ## Active Backlog
 
-- [ ] **Sanitizer support** - Add ASan, UBSan, TSan CMake presets for runtime bug detection
 - [ ] **Performance profiling** - Add perf/Instruments support, profile-guided optimization (PGO) builds
 
 ---
@@ -71,6 +70,9 @@
 - [x] Add GNUInstallDirs
 - [x] Add CPack support
 - [x] Version header generation (version.h from CMake)
+- [x] Sanitizer support (ASan+UBSan, TSan presets for Linux)
+- [x] Comprehensive compiler warnings (platform-tuned for Clang on Windows/Linux)
+- [x] Document design decisions (copilot-instructions.md, README.md)
 
 ### Completed Improvement Ideas
 

@@ -8,6 +8,8 @@ Checks: >
   portability-*,
   readability-*,
   -bugprone-easily-swappable-parameters,
+  -bugprone-exception-escape,
+  -misc-include-cleaner,
   -modernize-use-trailing-return-type,
   -readability-identifier-naming,
   -readability-identifier-length,
