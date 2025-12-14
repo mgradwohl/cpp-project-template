@@ -5,7 +5,7 @@ A modern C++23 project template with clang toolchain, CMake Presets, Google Test
 ## Features
 
 - **Modern C++23** with clang as the primary compiler
-- **CMake 3.28+** build system with CMake Presets and Ninja
+- **CMake 3.28+** build system with Ninja (using CMake 4.2.1 currently)
 - **Google Test** for unit testing
 - **spdlog** for logging (via FetchContent)
 - **clang-tidy** and **clang-format** integration
@@ -87,8 +87,8 @@ ctest --preset win-debug
 ## Requirements
 
 ### Linux
-- Clang 17+ (21 recommended)
-- CMake 3.28+
+- Clang 21+ recommended
+- CMake 3.28+ (4.2.1+ recommended)
 - Ninja
 - lld (LLVM linker)
 
@@ -98,10 +98,9 @@ sudo apt install clang-21 lld-21 cmake ninja-build
 ```
 
 ### Windows
-- LLVM/Clang (set `LLVM_ROOT` environment variable)
+- LLVM/Clang 21+ (set `LLVM_ROOT` environment variable)
 - CMake 3.28+
 - Ninja
-- (Optional) vcpkg for package management
 
 ## Project Structure
 
