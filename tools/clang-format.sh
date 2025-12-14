@@ -39,7 +39,7 @@ CLANG_FORMAT=""
 if command -v clang-format &> /dev/null; then
     CLANG_FORMAT="clang-format"
 else
-    for ver in 21 20 19 18 17; do
+    for ver in 22 21 20 19 18 17; do
         if [[ -x "/usr/lib/llvm-$ver/bin/clang-format" ]]; then
             CLANG_FORMAT="/usr/lib/llvm-$ver/bin/clang-format"
             break

@@ -9,7 +9,7 @@ Thank you for your interest in contributing!
 **Linux:**
 ```bash
 # Ubuntu/Debian
-sudo apt install clang-21 lld-21 cmake ninja-build
+sudo apt install clang-22 lld-22 cmake ninja-build
 
 # Or use a recent clang version available on your system
 ```

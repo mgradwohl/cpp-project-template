@@ -27,6 +27,8 @@ option(MYPROJECT_BUILD_TESTS "Build tests" ON)
 option(MYPROJECT_ENABLE_PCH "Enable precompiled headers" ON)
 option(MYPROJECT_ENABLE_CCACHE "Enable compiler caching (ccache/sccache)" ON)
 option(MYPROJECT_ENABLE_COVERAGE "Enable code coverage instrumentation" OFF)
+option(MYPROJECT_ENABLE_FETCHCONTENT_CACHE "Use a shared FetchContent/CPM cache directory instead of per-build _deps" OFF)
+set(MYPROJECT_FETCHCONTENT_CACHE_DIR "" CACHE PATH "Override FetchContent/CPM cache directory when caching is enabled")
 
 # Compiler caching (ccache/sccache) - required for development
 if(MYPROJECT_ENABLE_CCACHE)
@@ -81,7 +83,7 @@ endfunction()
 
 find_program(CLANG_TIDY_EXE NAMES clang-tidy
     HINTS
-        "/usr/lib/llvm-21/bin"
+        "/usr/lib/llvm-22/bin"
         "$ENV{LLVM_ROOT}/bin"
         "$ENV{ProgramFiles}/LLVM/bin"
         "C:/Program Files/LLVM/bin"
@@ -89,7 +91,7 @@ find_program(CLANG_TIDY_EXE NAMES clang-tidy
 
 find_program(CLANG_FORMAT_EXE NAMES clang-format
     HINTS
-        "/usr/lib/llvm-21/bin"
+        "/usr/lib/llvm-22/bin"
         "$ENV{LLVM_ROOT}/bin"
         "$ENV{ProgramFiles}/LLVM/bin"
         "C:/Program Files/LLVM/bin"
@@ -100,6 +102,30 @@ if(MYPROJECT_ENABLE_IPO)
     check_ipo_supported(RESULT ipo_supported)
     if(ipo_supported)
         set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+    endif()
+endif()
+
+if(MYPROJECT_ENABLE_FETCHCONTENT_CACHE)
+    if(MYPROJECT_FETCHCONTENT_CACHE_DIR)
+        set(_myproject_fetchcontent_cache "${MYPROJECT_FETCHCONTENT_CACHE_DIR}")
+    elseif(DEFINED ENV{FETCHCONTENT_BASE_DIR} AND NOT "$ENV{FETCHCONTENT_BASE_DIR}" STREQUAL "")
+        set(_myproject_fetchcontent_cache "$ENV{FETCHCONTENT_BASE_DIR}")
+    else()
+        # Keep the shared cache outside build trees but near the workspace
+        set(_myproject_fetchcontent_cache "${CMAKE_SOURCE_DIR}/.cache/fetchcontent")
+    endif()
+
+    if(NOT IS_ABSOLUTE "${_myproject_fetchcontent_cache}")
+        get_filename_component(_myproject_fetchcontent_cache "${_myproject_fetchcontent_cache}" ABSOLUTE BASE_DIR "${CMAKE_SOURCE_DIR}")
+    endif()
+
+    if(NOT _myproject_fetchcontent_cache STREQUAL "")
+        file(MAKE_DIRECTORY "${_myproject_fetchcontent_cache}")
+        set(FETCHCONTENT_BASE_DIR "${_myproject_fetchcontent_cache}" CACHE PATH "Base dir for FetchContent downloads" FORCE)
+        if(NOT CPM_SOURCE_CACHE)
+            set(CPM_SOURCE_CACHE "${_myproject_fetchcontent_cache}" CACHE PATH "CPM.cmake source cache" FORCE)
+        endif()
+        message(STATUS "FetchContent cache enabled: ${FETCHCONTENT_BASE_DIR}")
     endif()
 endif()
 

@@ -39,7 +39,7 @@ COVERAGE_DIR="${PROJECT_ROOT}/coverage"
 # Find llvm tools
 LLVM_PROFDATA=""
 LLVM_COV=""
-for ver in 21 20 19 18 17; do
+for ver in 22 21 20 19 18 17; do
     if [[ -x "/usr/lib/llvm-$ver/bin/llvm-profdata" ]]; then
         LLVM_PROFDATA="/usr/lib/llvm-$ver/bin/llvm-profdata"
         LLVM_COV="/usr/lib/llvm-$ver/bin/llvm-cov"

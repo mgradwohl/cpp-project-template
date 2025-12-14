@@ -35,7 +35,7 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 # Required versions (minimum)
 $MIN_CMAKE_VERSION = [Version]"3.28"
-$MIN_CLANG_VERSION = 21
+$MIN_CLANG_VERSION = 22
 $MIN_CCACHE_VERSION = [Version]"4.9.1"
 
 # Helper functions for colored output

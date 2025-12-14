@@ -4,7 +4,7 @@ A modern C++23 project template with clang toolchain, CMake Presets, Google Test
 
 ## Features
 
-- **Modern C++23** with clang as the primary compiler
+- **Modern C++23** with clang as the primary compiler (LLVM 22)
 - **CMake 3.28+** build system with CMake Presets and Ninja
 - **Auto-generated version header** with version, build type, compiler, and timestamp
 - **Precompiled headers** for faster compilation
@@ -93,7 +93,7 @@ ctest --preset win-debug
 ## Requirements
 
 ### Linux
-- Clang 21+ recommended
+- Clang 22+ recommended
 - CMake 3.28+ (4.2.1+ recommended)
 - Ninja
 - lld (LLVM linker)
@@ -103,12 +103,12 @@ ctest --preset win-debug
 - llvm-profdata, llvm-cov (for coverage reports)
 
 ```bash
-# Ubuntu/Debian (with LLVM APT repository for clang-21)
-sudo apt install clang-21 clang-tidy-21 clang-format-21 lld-21 llvm-21 cmake ninja-build ccache
+# Ubuntu/Debian (with LLVM APT repository for clang-22)
+sudo apt install clang-22 clang-tidy-22 clang-format-22 lld-22 llvm-22 cmake ninja-build ccache
 ```
 
 ### Windows
-- LLVM/Clang 21+ (includes clang-tidy, clang-format, lld, llvm-cov)
+- LLVM/Clang 22+ (includes clang-tidy, clang-format, lld, llvm-cov)
 - Set `LLVM_ROOT` environment variable
 - CMake 3.28+
 - Ninja
@@ -307,6 +307,22 @@ Then link to your target:
 
 ```cmake
 target_link_libraries(YourProjectName PRIVATE mylib)
+```
+
+### Optional: Shared FetchContent cache
+
+By default, dependencies fetched via FetchContent live under each build dir’s `_deps`. To speed up repeated config/builds across presets while keeping the source tree clean, enable the shared cache (it defaults to `.cache/fetchcontent` beside the source root and is gitignored/excluded from tooling):
+
+```bash
+cmake --preset debug -DMYPROJECT_ENABLE_FETCHCONTENT_CACHE=ON
+
+cmake --preset win-debug -DMYPROJECT_ENABLE_FETCHCONTENT_CACHE=ON
+```
+
+To pick a custom cache directory (also reused by CPM if you add it), set either `MYPROJECT_FETCHCONTENT_CACHE_DIR` or the standard `FETCHCONTENT_BASE_DIR`:
+
+```bash
+cmake --preset debug -DMYPROJECT_ENABLE_FETCHCONTENT_CACHE=ON -DMYPROJECT_FETCHCONTENT_CACHE_DIR=/path/to/cache
 ```
 
 ## CI/CD

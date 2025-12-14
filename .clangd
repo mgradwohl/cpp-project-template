@@ -60,6 +60,7 @@ If:
   PathMatch:
     - .*/build/.*
     - .*/_deps/.*
+    - .*/\.cache/.*
     - .*/dist/.*
     - .*/coverage/.*
     - .*\.in$

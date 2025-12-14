@@ -18,7 +18,7 @@ SKIP_PREREQS=false
 
 # Required versions (minimum)
 MIN_CMAKE_VERSION="3.28"
-MIN_CLANG_VERSION="21"
+MIN_CLANG_VERSION="22"
 MIN_CCACHE_VERSION="4.9.1"
 
 # Colors for output
@@ -190,8 +190,8 @@ install_prerequisites() {
         apt)
             info "Adding LLVM repository for latest clang..."
             # Check if we need to add the LLVM repo
-            if ! apt-cache policy clang-21 2>/dev/null | grep -q "Candidate:"; then
-                warn "clang-21 not in default repos, adding LLVM apt repository..."
+            if ! apt-cache policy clang-22 2>/dev/null | grep -q "Candidate:"; then
+                warn "clang-22 not in default repos, adding LLVM apt repository..."
                 sudo apt-get update
                 sudo apt-get install -y wget gnupg software-properties-common
                 wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
@@ -214,8 +214,8 @@ install_prerequisites() {
             sudo apt-get install -y clang clang-tidy clang-format lld llvm cmake ninja-build ccache
             
             # Try to install versioned packages if available
-            if apt-cache show clang-21 &>/dev/null; then
-                sudo apt-get install -y clang-21 clang-tidy-21 clang-format-21 lld-21 llvm-21
+            if apt-cache show clang-22 &>/dev/null; then
+                sudo apt-get install -y clang-22 clang-tidy-22 clang-format-22 lld-22 llvm-22
             fi
             ;;
         dnf|yum)
@@ -260,16 +260,16 @@ suggest_alternatives_fix() {
         clang|clang++)
             info "Try one of these fixes:"
             echo "  1. Use update-alternatives (recommended):"
-            echo "     sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-21 100"
-            echo "     sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-21 100"
+            echo "     sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-22 100"
+            echo "     sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-22 100"
             echo "     sudo update-alternatives --config clang"
             echo ""
             echo "  2. Or add to your PATH (in ~/.bashrc or ~/.profile):"
-            echo "     export PATH=\"/usr/lib/llvm-21/bin:\$PATH\""
+            echo "     export PATH=\"/usr/lib/llvm-22/bin:\$PATH\""
             echo ""
             echo "  3. Or use environment variables:"
-            echo "     export CC=clang-21"
-            echo "     export CXX=clang++-21"
+            echo "     export CC=clang-22"
+            echo "     export CXX=clang++-22"
             ;;
         cmake)
             info "Try one of these fixes:"

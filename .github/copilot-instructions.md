@@ -12,7 +12,7 @@ MyProject is a cross-platform C++23 application built with modern tooling. The p
 ## Development Environment
 
 ### Required Tools
-- **Compiler:** Clang 21+ with lld linker
+- **Compiler:** Clang 22+ with lld linker
 - **Build System:** CMake 3.28+ with Ninja and CMake Presets
 - **Compiler Cache:** ccache 4.9.1+ (required for faster rebuilds)
 - **Static Analysis:** clang-tidy (included with LLVM)
@@ -139,6 +139,7 @@ coverage/               # Coverage reports (gitignored)
 - When making changes to the project structure, scripts (.sh or .ps1), clang files (.clang-format, .clang-tidy, .clangd), or CMake files, update README.md accordingly and copilot-instructions.md if needed and ensure setup scripts and workflow.yml files reflect changes.
 - if new folders are created under the project root, make sure to make a smart choice to .gitignore them if needed and exclude them from clangd, clang-format and clang-tidy configurations.
 - When adding a new component or depency ensure to use CMake FetchContent where possible and document the addition in README.md, and update setup scripts, project scripts, readmes, workflow.yml files as needed, and copilot-instructions.md if needed. Also update clangd, clang-format and clang-tidy configurations to exclude the new dependency if needed. 
+- If FetchContent downloads need to be reused across presets, enable the shared cache via `MYPROJECT_ENABLE_FETCHCONTENT_CACHE=ON` (optional). The default cache locations are `%LOCALAPPDATA%\cmake-fetchcontent` (Windows) or `~/.cache/cmake-fetchcontent`/`$XDG_CACHE_HOME` (Linux/macOS). Respect a user-specified `MYPROJECT_FETCHCONTENT_CACHE_DIR` when provided.
 
 ## Testing
 

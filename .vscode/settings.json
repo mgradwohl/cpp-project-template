@@ -38,15 +38,18 @@
     // Windows: "C:\\Program Files\\LLVM\\bin\\clangd.exe"
     "clang-format.executable": "${env:LLVM_ROOT}/bin/clang-format",
     "files.exclude": {
-        "**/generated/**": true
+        "**/generated/**": true,
+        "**/.cache/**": true
     },
     "files.watcherExclude": {
         "**/build/**": true,
-        "**/_deps/**": true
+        "**/_deps/**": true,
+        "**/.cache/**": true
     },
     "search.exclude": {
         "**/build/**": true,
-        "**/_deps/**": true
+        "**/_deps/**": true,
+        "**/.cache/**": true
     },
     "editor.formatOnSave": true,
     "[cpp]": {
@@ -55,7 +58,8 @@
     "[c]": {
         "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
     },
-    "clangd.checkUpdates": true
+    "clangd.checkUpdates": true,
+    "clangd.onConfigChanged": "restart"
     // "cmake.cmakePath": "/snap/bin/cmake",
     // "cmake.cpackPath": "C:\\Program Files\\CMake\\bin\\cmake.exe",
     // "cmake.ctestPath": "/snap/bin/cmake"
