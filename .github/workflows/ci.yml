@@ -13,10 +13,17 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Install dependencies
+    - name: Install LLVM 21
       run: |
-        sudo apt-get update
-        sudo apt-get install -y ninja-build clang clang-tidy clang-format lld ccache llvm
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 21
+        sudo apt-get install -y ninja-build ccache
+        # Set up alternatives so clang/clang++ point to version 21
+        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-21 100
+        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-21 100
+        sudo update-alternatives --install /usr/bin/lld lld /usr/bin/lld-21 100
+        sudo update-alternatives --install /usr/bin/ld.lld ld.lld /usr/bin/ld.lld-21 100
     
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -67,10 +74,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Install clang-format
+    - name: Install LLVM 21
       run: |
-        sudo apt-get update
-        sudo apt-get install -y clang-format
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 21
+        sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-21 100
     
     - name: Check formatting
       run: ./tools/check-format.sh
@@ -81,10 +90,17 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Install dependencies
+    - name: Install LLVM 21
       run: |
-        sudo apt-get update
-        sudo apt-get install -y ninja-build clang clang-tidy lld ccache
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 21
+        sudo apt-get install -y ninja-build ccache
+        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-21 100
+        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-21 100
+        sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-21 100
+        sudo update-alternatives --install /usr/bin/lld lld /usr/bin/lld-21 100
+        sudo update-alternatives --install /usr/bin/ld.lld ld.lld /usr/bin/ld.lld-21 100
     
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -101,10 +117,18 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Install dependencies
+    - name: Install LLVM 21
       run: |
-        sudo apt-get update
-        sudo apt-get install -y ninja-build clang clang-tidy clang-format lld llvm ccache
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 21
+        sudo apt-get install -y ninja-build ccache
+        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-21 100
+        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-21 100
+        sudo update-alternatives --install /usr/bin/lld lld /usr/bin/lld-21 100
+        sudo update-alternatives --install /usr/bin/ld.lld ld.lld /usr/bin/ld.lld-21 100
+        sudo update-alternatives --install /usr/bin/llvm-profdata llvm-profdata /usr/bin/llvm-profdata-21 100
+        sudo update-alternatives --install /usr/bin/llvm-cov llvm-cov /usr/bin/llvm-cov-21 100
     
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
