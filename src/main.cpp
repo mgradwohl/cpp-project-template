@@ -14,11 +14,9 @@
 #endif
 
 #ifdef _WIN32
-#include <cstdio>
-#endif
-
 #include <memory>
-#include <print>
+#endif
+#include <cstdio>
 
 auto main() -> int
 {
@@ -30,8 +28,8 @@ auto main() -> int
     {
         AllocConsole();
         // Redirect stdout/stderr to the new console
-        FILE* out = nullptr;  // NOLINT(misc-const-correctness)
-        FILE* err = nullptr;  // NOLINT(misc-const-correctness)
+        FILE* out = nullptr; // NOLINT(misc-const-correctness)
+        FILE* err = nullptr; // NOLINT(misc-const-correctness)
         freopen_s(&out, "CONOUT$", "w", stdout);
         freopen_s(&err, "CONOUT$", "w", stderr);
     }
@@ -52,6 +50,6 @@ auto main() -> int
     spdlog::debug("Compiler: {} {}", myproject::Version::COMPILER_ID, myproject::Version::COMPILER_VERSION);
     spdlog::debug("Built: {} {}", myproject::Version::BUILD_DATE, myproject::Version::BUILD_TIME);
 
-    std::println("Hello, World!");
+    std::printf("Hello, World!\n");
     return 0;
 }

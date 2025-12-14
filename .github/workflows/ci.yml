@@ -13,25 +13,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Install LLVM 22
-      run: |
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh 22
-        sudo apt-get install -y ninja-build ccache clang-format-22 clang-tidy-22
-        # Set up alternatives
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-22 100
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-22 100
-        sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-22 100
-        sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-22 100
-        sudo update-alternatives --install /usr/bin/lld lld /usr/bin/lld-22 100
-        sudo update-alternatives --install /usr/bin/ld.lld ld.lld /usr/bin/ld.lld-22 100
-        sudo update-alternatives --install /usr/bin/llvm-profdata llvm-profdata /usr/bin/llvm-profdata-22 100
-        sudo update-alternatives --install /usr/bin/llvm-cov llvm-cov /usr/bin/llvm-cov-22 100
-        sudo update-alternatives --set clang /usr/bin/clang-22
-        sudo update-alternatives --set clang++ /usr/bin/clang++-22
-        sudo update-alternatives --set clang-format /usr/bin/clang-format-22
-        sudo update-alternatives --set clang-tidy /usr/bin/clang-tidy-22
+    - name: Setup LLVM
+      uses: ./.github/actions/setup-llvm
+      with:
+        install-clang-format: 'true'
+        install-clang-tidy: 'true'
+        install-coverage-tools: 'true'
     
     - name: Validate prerequisites
       run: ./tools/check-prereqs.sh
@@ -43,23 +30,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Install LLVM 22
-      run: |
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh 22
-        sudo apt-get install -y ninja-build ccache
-        # Set up alternatives so clang/clang++ point to version 22
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-22 100
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-22 100
-        sudo update-alternatives --install /usr/bin/lld lld /usr/bin/lld-22 100
-        sudo update-alternatives --install /usr/bin/ld.lld ld.lld /usr/bin/ld.lld-22 100
-        # Explicitly set the alternatives (in case older version was already registered)
-        sudo update-alternatives --set clang /usr/bin/clang-22
-        sudo update-alternatives --set clang++ /usr/bin/clang++-22
-        # Verify versions
-        clang --version
-        clang++ --version
+    - name: Setup LLVM
+      uses: ./.github/actions/setup-llvm
     
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -112,14 +84,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Install LLVM 22
-      run: |
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh 22
-        # clang-format-22 is in clang-format-22 package (not installed by default llvm.sh)
-        sudo apt-get install -y clang-format-22
-        sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-22 100
+    - name: Setup LLVM
+      uses: ./.github/actions/setup-llvm
+      with:
+        install-clang-format: 'true'
+        install-ninja: 'false'
+        install-ccache: 'false'
     
     - name: Check formatting
       run: ./tools/check-format.sh
@@ -131,25 +101,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Install LLVM 22
-      run: |
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh 22
-        # clang-tidy-22 is in clang-tidy-22 package (not installed by default llvm.sh)
-        sudo apt-get install -y ninja-build ccache clang-tidy-22
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-22 100
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-22 100
-        sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-22 100
-        sudo update-alternatives --install /usr/bin/lld lld /usr/bin/lld-22 100
-        sudo update-alternatives --install /usr/bin/ld.lld ld.lld /usr/bin/ld.lld-22 100
-        # Explicitly set the alternatives
-        sudo update-alternatives --set clang /usr/bin/clang-22
-        sudo update-alternatives --set clang++ /usr/bin/clang++-22
-        sudo update-alternatives --set clang-tidy /usr/bin/clang-tidy-22
-        # Verify versions
-        clang --version
-        clang-tidy --version
+    - name: Setup LLVM
+      uses: ./.github/actions/setup-llvm
+      with:
+        install-clang-tidy: 'true'
     
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -167,25 +122,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Install LLVM 22
-      run: |
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh 22
-        sudo apt-get install -y ninja-build ccache
-        # Set up alternatives so clang/clang++ point to version 22
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-22 100
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-22 100
-        sudo update-alternatives --install /usr/bin/lld lld /usr/bin/lld-22 100
-        sudo update-alternatives --install /usr/bin/ld.lld ld.lld /usr/bin/ld.lld-22 100
-        sudo update-alternatives --install /usr/bin/llvm-profdata llvm-profdata /usr/bin/llvm-profdata-22 100
-        sudo update-alternatives --install /usr/bin/llvm-cov llvm-cov /usr/bin/llvm-cov-22 100
-        # Explicitly set the alternatives (in case older version was already registered)
-        sudo update-alternatives --set clang /usr/bin/clang-22
-        sudo update-alternatives --set clang++ /usr/bin/clang++-22
-        # Verify versions
-        clang --version
-        clang++ --version
+    - name: Setup LLVM
+      uses: ./.github/actions/setup-llvm
+      with:
+        install-coverage-tools: 'true'
     
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -213,18 +153,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Install LLVM 22
-      run: |
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh 22
-        sudo apt-get install -y ninja-build ccache
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-22 100
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-22 100
-        sudo update-alternatives --install /usr/bin/lld lld /usr/bin/lld-22 100
-        sudo update-alternatives --install /usr/bin/ld.lld ld.lld /usr/bin/ld.lld-22 100
-        sudo update-alternatives --set clang /usr/bin/clang-22
-        sudo update-alternatives --set clang++ /usr/bin/clang++-22
+    - name: Setup LLVM
+      uses: ./.github/actions/setup-llvm
     
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
