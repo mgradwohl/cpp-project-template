@@ -23,7 +23,7 @@ The checked-in application is intentionally small: `src/main.cpp` logs version i
 3. Run the one-time rename script:
 
 ```bash
-# Linux/macOS
+# Linux
 ./setup.sh --name "YourProjectName" --author "Your Name"
 ```
 
