@@ -1,114 +1,87 @@
 # Contributing to MyProject
 
-Thank you for your interest in contributing!
+This guide covers the contributor workflow and coding conventions. Project capabilities and command reference live in [README.md](README.md).
 
-## Development Setup
+## Set Up the Toolchain
 
-### Prerequisites
-
-**Linux:**
-```bash
-# Ubuntu/Debian
-sudo apt install clang-22 lld-22 cmake ninja-build
-
-# Or use a recent clang version available on your system
-```
-
-**Windows:**
-1. Install LLVM from https://releases.llvm.org/
-2. Set `LLVM_ROOT` environment variable to the LLVM installation path
-3. Install CMake and Ninja
-4. (Optional) Install vcpkg for package management
-
-### Building
+Install the tools listed in the README, then validate them:
 
 ```bash
-# Linux
-./tools/configure.sh debug
-./tools/build.sh debug
-
-# Windows (PowerShell)
-.\tools\configure.ps1 debug
-.\tools\build.ps1 debug
+./tools/check-prereqs.sh
 ```
 
-### Running Tests
+On Windows, set `LLVM_ROOT` and run `.\tools\check-prereqs.ps1`. The repository is primarily validated with Clang 22, CMake 3.28 or newer, Ninja, lld, and ccache 4.9.1 or newer.
+
+## Build and Test
+
+Use CMake Presets rather than the deprecated configure and build wrappers:
 
 ```bash
-ctest --test-dir build/debug --output-on-failure
+cmake --preset debug
+cmake --build --preset debug
+ctest --preset debug
 ```
 
-## Code Style
+Use `win-debug` for the corresponding Windows commands. Run `cmake --list-presets` for other build and test configurations.
 
-### Formatting
-
-This project uses clang-format with the configuration in `.clang-format`. Run before committing:
+Before opening a pull request, run the checks relevant to the change:
 
 ```bash
-./tools/clang-format.sh    # Linux
-.\tools\clang-format.ps1   # Windows
+./tools/check-format.sh
+./tools/clang-tidy.sh debug
+ctest --preset debug
 ```
 
-To check without modifying:
-```bash
-./tools/check-format.sh    # Linux
-.\tools\check-format.ps1   # Windows
-```
+Apply formatting with `./tools/clang-format.sh`. PowerShell equivalents are available in `tools/`.
 
-### Static Analysis
+## C++ Conventions
 
-Run clang-tidy regularly:
+- Use C++23 and follow the repository `.clang-format` and `.clang-tidy` configurations.
+- Name types in `PascalCase`, functions in `camelCase`, constants in `UPPER_SNAKE_CASE`, and private members with an `m_` prefix.
+- Prefer RAII, const-correctness, explicit error handling, and standard-library facilities.
+- Use `#pragma once` in headers.
+- Use `#ifdef X` and `#ifndef X` for simple preprocessor checks.
+- Avoid `using namespace std` in headers.
 
-```bash
-./tools/clang-tidy.sh debug    # Linux
-.\tools\clang-tidy.ps1 debug   # Windows
-```
+Order includes in groups separated by blank lines:
 
-### Include Guidelines
+1. The matching header in a `.cpp` file
+2. Project headers, alphabetically
+3. Third-party headers, alphabetically
+4. Standard library headers, alphabetically
+5. Other platform or system headers when needed
 
-**Include order:**
-1. Matching header (for `.cpp` files)
-2. Project headers (alphabetical)
-3. Third-party headers (alphabetical)
-4. Standard library headers (alphabetical)
+Warnings are configured per project target. Do not weaken them globally to accommodate a dependency; declare fetched dependencies as `SYSTEM`.
 
-Separate each group with a blank line.
+## Tests
 
-**Example:**
-```cpp
-#include "MyClass.h"
+Use Google Test and place tests under `tests/`. Add new test source files to `tests/CMakeLists.txt`, and add application source or header files to the corresponding lists in the root `CMakeLists.txt`.
 
-#include "src/utils/Helper.h"
+Prefer behavior-focused test names and assertions. Tests should cover changed behavior rather than implementation details.
 
-#include <spdlog/spdlog.h>
+## Documentation
 
-#include <memory>
-#include <string>
-#include <vector>
-```
+Keep each document focused:
 
-## Pull Request Process
+- `README.md` describes the template, supported workflows, and command reference.
+- `CONTRIBUTING.md` defines contributor expectations and code conventions.
+- `TODO.md` contains only current backlog and deferred ideas.
+- `SECURITY.md` defines vulnerability reporting and support expectations.
+- `.github/copilot-instructions.md` contains repository-specific agent guidance.
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Run formatting: `./tools/clang-format.sh`
-5. Run static analysis: `./tools/clang-tidy.sh`
-6. Run tests: `ctest --test-dir build/debug`
-7. Commit your changes (`git commit -m 'Add amazing feature'`)
-8. Push to the branch (`git push origin feature/amazing-feature`)
-9. Open a Pull Request
+Update documentation when changing CMake options, presets, scripts, CI, dependencies, generated paths, or project structure.
 
-The **PR template** will guide you through the checklist. Please complete all applicable items before requesting review.
+This project currently has no public library API. Do not add JSDoc, docstrings, or comments to self-explanatory implementation code. If reusable public headers are introduced, use Doxygen-compatible comments for public contracts where names and types are insufficient; keep internal implementation commentary minimal.
 
-## Reporting Issues
+## Pull Requests
 
-Please use the appropriate **issue template**:
-- **Bug Report** - For bugs and unexpected behavior
-- **Feature Request** - For new features and improvements
+1. Create a focused branch.
+2. Make the smallest complete change.
+3. Add or update tests when behavior changes.
+4. Run formatting, static analysis, and relevant test presets.
+5. Update documentation when the user or developer workflow changes.
+6. Open a pull request and complete the repository template.
 
-The templates will guide you to include all necessary information.
+Do not include unrelated cleanup in the same pull request.
 
-### Security Issues
-
-For security vulnerabilities, please see [SECURITY.md](SECURITY.md) for responsible disclosure guidelines. **Do not** open public issues for security vulnerabilities.
+Use the issue templates for public bug reports and feature requests. Report security vulnerabilities privately as described in [SECURITY.md](SECURITY.md).

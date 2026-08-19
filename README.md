@@ -1,459 +1,189 @@
 # MyProject
 
-A modern C++23 project template with clang toolchain, CMake Presets, Google Test, and VS Code integration.
+A cross-platform C++23 application template built around Clang, CMake Presets, Ninja, Google Test, and VS Code.
 
-## Features
+## What Is Included
 
-- **Modern C++23** with clang as the primary compiler (LLVM 22)
-- **CMake 3.28+** build system with CMake Presets and Ninja
-- **Auto-generated version header** with version, build type, compiler, and timestamp
-- **Precompiled headers** for faster compilation
-- **Compiler caching** via ccache/sccache for faster rebuilds
-- **Code coverage** with llvm-cov and HTML reports
-- **CPack packaging** for distributable archives and installers
-- **GNUInstallDirs** for portable installation paths
-- **Google Test** for unit testing
-- **spdlog** for logging (via FetchContent)
-- **clang-tidy** and **clang-format** integration
-- **VS Code** tasks, launch configs, and clangd support
-- **Cross-platform** support for Linux and Windows
+- Linux and Windows presets for debug, release, optimized, coverage, and sanitizer builds
+- Clang with lld as the primary toolchain
+- Strict per-target warnings, with warnings treated as errors by default
+- Precompiled headers and ccache/sccache support
+- Google Test and spdlog through CMake `FetchContent`
+- clang-format, clang-tidy, llvm-cov, and CPack integration
+- GitHub Actions jobs for builds, tests, formatting, static analysis, coverage, and sanitizers
+- VS Code tasks, launch configurations, and clangd settings
+- A generated version header containing project, build, and compiler information
 
-## Getting Started
+The checked-in application is intentionally small: `src/main.cpp` logs version information and prints a greeting, while `tests/test_main.cpp` contains example Google Test cases.
 
-### Step 1: Create a New Repository from This Template
+## Create a Project from the Template
 
-1. Click the green **"Use this template"** button at the top of this page
-2. Select **"Create a new repository"**
-3. Name your repository (e.g., `AwesomeApp`)
-4. Click **"Create repository"**
-
-### Step 2: Clone Your New Repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-cd YOUR_REPO_NAME
-```
-
-### Step 3: Run the Setup Script
-
-The setup script renames all placeholder names (`MyProject`, `MYPROJECT`, `myproject`) throughout the codebase to your project name:
+1. Select **Use this template** on GitHub and create a repository.
+2. Clone the new repository.
+3. Run the one-time rename script:
 
 ```bash
 # Linux/macOS
-./setup.sh --name "YourProjectName"
-
-# Windows (PowerShell)
-.\setup.ps1 -Name "YourProjectName"
-
-# Optional: include author name
 ./setup.sh --name "YourProjectName" --author "Your Name"
 ```
 
-> **Note:** The setup script deletes itself after running - it's only needed once.
-
-### Step 4: Commit the Changes
-
-```bash
-git add -A
-git commit -m "Initial project setup"
-git push
+```powershell
+# Windows
+.\setup.ps1 -Name "YourProjectName" -Author "Your Name"
 ```
 
-### Step 5: Build and Run
+The author argument is optional. The setup scripts replace the `MyProject`, `MYPROJECT`, and `myproject` placeholders, then remove both setup scripts.
 
-Using CMake Presets (recommended):
+Commit the generated changes before beginning application development.
+
+## Requirements
+
+| Tool | Requirement |
+| --- | --- |
+| Clang/LLVM | 22 or newer, including lld |
+| CMake | 3.28 or newer |
+| Ninja | Required by all presets |
+| ccache | 4.9.1 or newer |
+| clang-format and clang-tidy | Required for quality checks |
+| llvm-profdata and llvm-cov | Required only for coverage |
+
+On Windows, set `LLVM_ROOT` to the LLVM installation directory. `Devshell-Updated.ps1` can load a Visual Studio Developer Shell and configure the expected paths; update its installation paths if necessary.
+
+Check a Linux development environment with:
+
+```bash
+./tools/check-prereqs.sh
+```
+
+The equivalent Windows command is:
+
+```powershell
+.\tools\check-prereqs.ps1
+```
+
+## Build, Run, and Test
+
+CMake Presets are the supported interface. The older `tools/configure.*` and `tools/build.*` wrappers remain only for backward compatibility.
 
 ```bash
 # Linux
 cmake --preset debug
 cmake --build --preset debug
-./build/debug/YourProjectName
-
-# Windows (PowerShell)
-cmake --preset win-debug
-cmake --build --preset win-debug
-.\build\win-debug\YourProjectName.exe
-```
-
-List all available presets:
-```bash
-cmake --list-presets
-```
-
-### Step 6: Run Tests
-
-```bash
-# Linux
 ctest --preset debug
-
-# Windows
-ctest --preset win-debug
+./build/debug/MyProject
 ```
-
-## Requirements
-
-### Linux
-- Clang 22+ recommended
-- CMake 3.28+ (4.2.1+ recommended)
-- Ninja
-- lld (LLVM linker)
-- clang-tidy (static analysis)
-- clang-format (code formatting)
-- ccache 4.9.1+ (required for faster rebuilds)
-- llvm-profdata, llvm-cov (for coverage reports)
-
-```bash
-# Ubuntu/Debian (with LLVM APT repository for clang-22)
-sudo apt install clang-22 clang-tidy-22 clang-format-22 lld-22 llvm-22 cmake ninja-build ccache
-```
-
-### Windows
-- LLVM/Clang 22+ (includes clang-tidy, clang-format, lld, llvm-cov)
-- Set `LLVM_ROOT` environment variable
-- CMake 3.28+
-- Ninja
-- ccache 4.9.1+ (install via `choco install ccache` or `scoop install ccache`)
-
-#### Windows Development Environment
-
-For Windows builds, you need the `LLVM_ROOT` environment variable set and Visual Studio Developer Shell loaded. Use the provided DevShell script to set up your environment:
 
 ```powershell
-# Load development environment (sets LLVM_ROOT, loads VS DevShell)
-. .\Devshell-Updated.ps1
+# Windows
+cmake --preset win-debug
+cmake --build --preset win-debug
+ctest --preset win-debug
+.\build\win-debug\MyProject.exe
 ```
 
-The script:
-- Loads Visual Studio Developer Shell
-- Sets `LLVM_ROOT` environment variable
-- Adds LLVM and CMake to PATH
+Run `cmake --list-presets` to list the presets available on the current platform.
 
-> **Note:** You may need to update the paths in `Devshell-Updated.ps1` to match your Visual Studio installation.
+### Presets
 
-## Project Structure
+| Linux | Windows | Purpose |
+| --- | --- | --- |
+| `debug` | `win-debug` | Debug symbols and uninitialized-variable pattern filling |
+| `relwithdebinfo` | `win-relwithdebinfo` | Optimized build with debug information |
+| `release` | `win-release` | Standard optimized release |
+| `optimized` | `win-optimized` | `-O3`, IPO/LTO, x86-64-v3, and stripped output |
+| `coverage` | `win-coverage` | LLVM coverage instrumentation with PCH disabled |
+| `asan-ubsan` | - | AddressSanitizer and UndefinedBehaviorSanitizer |
+| `tsan` | - | ThreadSanitizer |
 
-```
-.
-├── CMakeLists.txt          # Main build configuration
-├── CMakePresets.json       # CMake presets for all platforms/configs
-├── Devshell-Updated.ps1    # Windows dev environment setup
-├── setup.sh / setup.ps1    # Project renaming scripts (deleted after use)
-├── src/
-│   ├── main.cpp            # Application entry point
-│   └── version.h.in        # Version header template (generates version.h)
-├── tests/
-│   ├── CMakeLists.txt      # Test configuration
-│   └── test_main.cpp       # Example tests
-├── tools/
-│   ├── build.sh/ps1        # Build helper scripts
-│   ├── configure.sh/ps1    # Configure helper scripts
-│   ├── check-prereqs.sh/ps1 # Check prerequisite tools and versions
-│   ├── clang-tidy.sh/ps1   # Static analysis
-│   ├── clang-format.sh/ps1 # Code formatting
-│   ├── check-format.sh/ps1 # Format checking
-│   └── coverage.sh/ps1     # Code coverage reports
-├── dist/                   # CPack output (generated, gitignored)
-│   └── *.zip, *.tar.gz     # Distribution packages
-├── coverage/               # Coverage reports (generated, gitignored)
-│   └── index.html          # HTML coverage report
-├── .clang-format           # Formatting rules
-├── .clang-tidy             # Static analysis rules
-├── .clangd                 # clangd LSP configuration
-├── .github/
-│   ├── workflows/ci.yml    # CI/CD pipeline
-│   ├── ISSUE_TEMPLATE/     # Bug report and feature request templates
-│   ├── pull_request_template.md  # PR checklist
-│   └── dependabot.yml      # Automated dependency updates
-├── SECURITY.md             # Security policy and vulnerability reporting
-└── .vscode/
-    ├── tasks.json          # Build tasks (platform-aware)
-    ├── launch.json         # Debug configurations (platform-aware)
-    └── settings.json       # Editor settings
-```
+Each configure preset has a matching build and test preset.
 
-## VS Code Integration
-
-Install recommended extensions (VS Code will prompt you):
-- **clangd** (LLVM) - IntelliSense and code completion
-- **CodeLLDB** - Debugging support
-- **CMake Tools** - CMake integration
-
-### Build Tasks
-
-Tasks automatically use the correct preset for your platform (Linux or Windows):
-
-- `Ctrl+Shift+B` - Build debug (default)
-- Use Command Palette (`Ctrl+Shift+P`) → "Tasks: Run Task" for other configurations
-
-Available tasks:
-- CMake: Configure/Build Debug, RelWithDebInfo, Release, Optimized
-- CMake: Build ASan+UBSan (Linux), Build TSan (Linux)
-- CMake: Test Debug
-- Clang-Tidy, Clang-Format, Check Format
-- Check Prerequisites
-
-### Debugging
-
-Launch configurations automatically use the correct paths for your platform:
-
-- `F5` - Debug with current launch configuration
-- Configurations: Debug (Debug), Debug (RelWithDebInfo), Run (Release), Run (Optimized)
-
-## Build Types
-
-Available as CMake presets (use `cmake --list-presets` to see all):
-
-| Preset (Linux) | Preset (Windows) | Description |
-|----------------|------------------|-------------|
-| `debug` | `win-debug` | Debug symbols, no optimization, security hardening |
-| `relwithdebinfo` | `win-relwithdebinfo` | Debug symbols + optimization |
-| `release` | `win-release` | Optimized, no debug symbols |
-| `optimized` | `win-optimized` | LTO, march=x86-64-v3, stripped |
-| `coverage` | `win-coverage` | Debug + code coverage instrumentation |
-| `asan-ubsan` | — | AddressSanitizer + UBSan (Linux only) |
-| `tsan` | — | ThreadSanitizer (Linux only) |
-
-## Code Quality Tools
-
-### Formatting
-```bash
-./tools/clang-format.sh        # Apply formatting (modifies files)
-./tools/check-format.sh        # Check compliance (no changes)
-```
-
-### Static Analysis
-```bash
-./tools/clang-tidy.sh debug    # Run clang-tidy
-```
-
-> **Note:** The build uses precompiled headers (PCH) for faster compilation. Since PCH files are compiler-version-specific, the clang-tidy target automatically strips PCH flags from the compile commands. This allows clang-tidy to work even if its version differs from the compiler version.
-
-### Code Coverage
-
-Generate code coverage reports using llvm-cov. Reports are output to the `coverage/` folder (gitignored).
+## Development Commands
 
 ```bash
-# Linux - generates HTML report
+./tools/clang-format.sh
+./tools/check-format.sh
+./tools/clang-tidy.sh debug
 ./tools/coverage.sh
-
-# Linux - generate and open in browser
-./tools/coverage.sh --open
-
-# Windows
-.\tools\coverage.ps1
-.\tools\coverage.ps1 -OpenReport
 ```
 
-The coverage report shows:
-- Line-by-line coverage highlighting (green = covered, red = not covered)
-- Coverage percentages per file and overall
-- Branch coverage for conditional statements
+PowerShell equivalents are available for each script. Use `./tools/coverage.sh --open` or `.\tools\coverage.ps1 -OpenReport` to open the generated report at `coverage/index.html`.
 
-View the report at `coverage/index.html` after generation.
+The coverage and sanitizer presets disable PCH where instrumentation or analysis requires it. clang-tidy uses a generated PCH-free compile database so the regular build can retain PCH.
 
-### Sanitizers (Linux only)
+## CMake Options
 
-Sanitizers catch bugs that unit tests and static analysis miss. Two presets are available:
+| Option | Default | Purpose |
+| --- | --- | --- |
+| `MYPROJECT_BUILD_TESTS` | `ON` | Build the Google Test target |
+| `MYPROJECT_ENABLE_CCACHE` | `ON` | Use sccache or ccache when available |
+| `MYPROJECT_ENABLE_COVERAGE` | `OFF` | Enable LLVM coverage instrumentation |
+| `MYPROJECT_ENABLE_FETCHCONTENT_CACHE` | `OFF` | Share dependency downloads across build trees |
+| `MYPROJECT_FETCHCONTENT_CACHE_DIR` | empty | Override the shared dependency cache path |
+| `MYPROJECT_ENABLE_IPO` | `ON` | Enable interprocedural optimization when supported |
+| `MYPROJECT_ENABLE_PCH` | `ON` | Enable application precompiled headers |
+| `MYPROJECT_ENABLE_WARNINGS` | `ON` | Enable the project warning set |
+| `MYPROJECT_WARNINGS_AS_ERRORS` | `ON` | Promote project warnings to errors |
 
-**AddressSanitizer + UndefinedBehaviorSanitizer** — catches memory errors and undefined behavior:
-```bash
-cmake --preset asan-ubsan
-cmake --build --preset asan-ubsan
-ctest --preset asan-ubsan
-# Or run directly:
-ASAN_OPTIONS=detect_leaks=1 ./build/asan-ubsan/MyProject
-```
+The checked-in presets enable the shared `FetchContent` cache. Its default location is `.cache/fetchcontent`; `MYPROJECT_FETCHCONTENT_CACHE_DIR` and the `FETCHCONTENT_BASE_DIR` environment variable can override it.
 
-**ThreadSanitizer** — catches data races in multithreaded code (cannot combine with ASan):
-```bash
-cmake --preset tsan
-cmake --build --preset tsan
-ctest --preset tsan
-```
+Options apply to project targets without imposing project warnings on third-party dependencies.
 
-Common issues detected:
-| Sanitizer | Detects |
-|-----------|---------|
-| ASan | Buffer overflows, use-after-free, double-free, memory leaks |
-| UBSan | Signed overflow, null pointer dereference, misaligned access |
-| TSan | Data races, deadlocks, thread leaks |
+## Packaging
 
-> **Note:** Sanitizers add runtime overhead (~2-5x slower). Use them during development and CI, not in production builds.
-
-### Compiler Warnings
-
-The project applies a comprehensive set of compiler warnings tuned for Clang on both Windows and Linux. Warnings are applied per-target (not globally) to avoid affecting third-party dependencies.
-
-**Baseline warnings (all platforms):**
-```
--Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow
--Wnon-virtual-dtor -Woverloaded-virtual -Wformat=2 -Wimplicit-fallthrough
--Wnull-dereference -Wdouble-promotion -Wcast-align -Wundef -Werror=return-type
-```
-
-**Linux/macOS additions:**
-```
--Wmisleading-indentation
-```
-
-**Windows suppressions** (reduces noise from MSVC STL/SDK headers):
-```
--Wno-unknown-pragmas -Wno-nonportable-system-include-path
-```
-
-**CMake options:**
-| Option | Default | Description |
-|--------|---------|-------------|
-| `MYPROJECT_ENABLE_WARNINGS` | `ON` | Enable all warnings |
-| `MYPROJECT_WARNINGS_AS_ERRORS` | `ON` | Treat warnings as errors (`-Werror`) |
-
-To disable warnings-as-errors for local development:
-```bash
-cmake --preset debug -DMYPROJECT_WARNINGS_AS_ERRORS=OFF
-```
-
-## Packaging with CPack
-
-Create distributable packages using CPack. Packages are output to the `dist/` folder (gitignored).
+Configure and build a release before invoking CPack:
 
 ```bash
-# First, build the release configuration
-cmake --preset release          # Linux
+cmake --preset release
 cmake --build --preset release
-
-# Create a ZIP package
-cpack --config build/release/CPackConfig.cmake -G ZIP
-
-# Windows
-cmake --preset win-release
-cmake --build --preset win-release
-cpack --config build/win-release/CPackConfig.cmake -G ZIP
+cpack --config build/release/CPackConfig.cmake
 ```
 
-Supported generators:
-| Generator | Platform | Output |
-|-----------|----------|--------|
-| `ZIP` | All | .zip archive |
-| `TGZ` | All | .tar.gz archive |
-| `DEB` | Linux | Debian .deb package |
-| `RPM` | Linux | Red Hat .rpm package |
-| `NSIS` | Windows | .exe installer |
+CPack always configures ZIP and TGZ archives. It also enables NSIS on Windows, DragNDrop on macOS, and DEB or RPM on Unix when the corresponding packaging tools are installed. Outputs are written to `dist/`.
 
-Packages are created in `dist/` with the naming format: `ProjectName-Version-Platform.ext`
+## Project Layout
 
-## Version Header
-
-The project auto-generates a `version.h` header at configure time with:
-- Project version (from CMakeLists.txt)
-- Build type (Debug, Release, etc.)
-- Compiler ID and version
-- Build timestamp (`__DATE__` and `__TIME__`)
-
-Usage:
-```cpp
-#include "version.h"
-
-spdlog::info("{} v{}", myproject::Version::PROJECT_NAME, myproject::Version::STRING);
-spdlog::debug("Built: {} {}", myproject::Version::BUILD_DATE, myproject::Version::BUILD_TIME);
+```text
+.
+|-- CMakeLists.txt              Main build and packaging configuration
+|-- CMakePresets.json           Configure, build, and test presets
+|-- src/                        Application source and version template
+|-- tests/                      Google Test target and examples
+|-- tools/                      Quality, coverage, and compatibility scripts
+|-- .github/
+|   |-- actions/setup-llvm/     Reusable CI toolchain setup
+|   |-- workflows/ci.yml        Build and quality workflow
+|   `-- copilot-instructions.md Repository guidance for coding agents
+|-- .vscode/                    Tasks, launch configurations, and editor settings
+|-- CONTRIBUTING.md             Contributor workflow and coding conventions
+|-- SECURITY.md                 Vulnerability reporting policy
+`-- TODO.md                     Current project backlog
 ```
 
-The header is generated to `build/<preset>/generated/version.h` and provides both C macros (`MYPROJECT_VERSION`) and a C++ namespace (`myproject::Version`).
+Generated `build/`, `coverage/`, `dist/`, `.cache/`, and `compile_commands.json` paths are ignored by Git.
 
-## Adding Dependencies
+## Dependencies
 
-Use CMake's `FetchContent` for header-only or source-based dependencies. Always use `SYSTEM` to suppress compiler warnings from third-party code:
+Runtime and test dependencies are pinned by Git tag:
 
-```cmake
-FetchContent_Declare(
-    mylib
-    GIT_REPOSITORY https://github.com/example/mylib.git
-    GIT_TAG v1.0.0
-    SYSTEM  # Treat as system headers to suppress warnings
-)
-FetchContent_MakeAvailable(mylib)
-```
+| Dependency | Version | Scope |
+| --- | --- | --- |
+| spdlog | 1.13.0 | Application logging |
+| Google Test | 1.15.2 | Tests only |
 
-Then link to your target:
+Add source dependencies with `FetchContent_Declare(... SYSTEM)` so third-party headers remain outside project warning enforcement.
 
-```cmake
-target_link_libraries(YourProjectName PRIVATE mylib)
-```
+## CI
 
-### Optional: Shared FetchContent cache
+`.github/workflows/ci.yml` runs on pushes and pull requests targeting `main`. It validates prerequisites, builds and tests Linux and Windows debug presets, checks formatting, runs clang-tidy, generates a coverage artifact, and exercises ASan+UBSan and TSan.
 
-By default, dependencies fetched via FetchContent live under each build dir’s `_deps`. To speed up repeated config/builds across presets while keeping the source tree clean, enable the shared cache (it defaults to `.cache/fetchcontent` beside the source root and is gitignored/excluded from tooling):
+Dependabot checks GitHub Actions dependencies weekly.
 
-```bash
-cmake --preset debug -DMYPROJECT_ENABLE_FETCHCONTENT_CACHE=ON
+## Documentation
 
-cmake --preset win-debug -DMYPROJECT_ENABLE_FETCHCONTENT_CACHE=ON
-```
+This repository currently produces an application, not a reusable library, so it has no exported API that needs generated reference documentation. Keep user and contributor guidance in Markdown. If public headers are added later, document their public types and functions with Doxygen-compatible C++ comments; do not use JSDoc or language-style docstrings.
 
-To pick a custom cache directory (also reused by CPM if you add it), set either `MYPROJECT_FETCHCONTENT_CACHE_DIR` or the standard `FETCHCONTENT_BASE_DIR`:
-
-```bash
-cmake --preset debug -DMYPROJECT_ENABLE_FETCHCONTENT_CACHE=ON -DMYPROJECT_FETCHCONTENT_CACHE_DIR=/path/to/cache
-```
-
-## CI/CD
-
-This template includes a GitHub Actions workflow (`.github/workflows/ci.yml`) that automatically:
-- Builds on Linux (Ubuntu 24.04) and Windows
-- Runs all tests
-- Runs sanitizers (ASan+UBSan, TSan) on Linux
-- Checks code formatting (clang-format)
-- Runs static analysis (clang-tidy)
-- Generates code coverage reports
-
-**Dependabot** is configured to automatically create PRs for GitHub Actions updates (weekly).
-
-## Design Decisions
-
-This section documents intentional design choices to help template users understand why certain approaches were taken.
-
-### What This Template Uses
-
-| Choice | Rationale |
-|--------|----------|
-| **CMake Presets** | Single source of truth for all build configurations. No separate toolchain files needed. |
-| **FetchContent** | Simple dependency management built into CMake. No external package manager required. |
-| **Platform default C++ libraries** | libstdc++ on Linux, MSVC STL on Windows. More portable than forcing libc++ everywhere. |
-| **clangd for IDE** | Superior C++ language server. cpptools disabled to avoid conflicts. |
-| **Individual CMake options** | Granular control (e.g., `MYPROJECT_ENABLE_PCH`) rather than umbrella "Developer Mode". |
-
-### Disabled Clang-Tidy Checks
-
-Some checks are disabled in `.clang-tidy` due to false positives or excessive noise:
-
-| Check | Reason |
-|-------|--------|
-| `bugprone-exception-escape` | Traces through spdlog/STL exception paths, creates wall of noise |
-| `misc-include-cleaner` | False positives with Windows headers (`<windows.h>`, `<cstdio>`) |
-| `bugprone-easily-swappable-parameters` | Too opinionated for general use |
-| `modernize-use-trailing-return-type` | Style preference, not a correctness issue |
-| `readability-identifier-naming` | Conflicts with different naming conventions |
-| `readability-identifier-length` | Too restrictive for template code |
-| `readability-magic-numbers` | Too noisy for a template project |
-| `readability-implicit-bool-conversion` | Common C++ idiom |
-| `portability-avoid-pragma-once` | `#pragma once` is the project standard |
-
-### Why Certain Features Are Not Included
-
-| Feature | Reason Not Included |
-|---------|---------------------|
-| **CMake toolchain files** | Presets provide complete build configurations already |
-| **install/export config** | This is an app template, not a library with downstream consumers |
-| **libc++** | Adds complexity; platform defaults work well and are more portable |
-| **CPM.cmake** | FetchContent is sufficient; CPM adds another dependency to manage |
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
-
-- Use the **issue templates** for bug reports and feature requests
-- PRs will be checked against the **PR template** checklist
-- Security issues should be reported per [SECURITY.md](SECURITY.md)
+See [CONTRIBUTING.md](CONTRIBUTING.md) for coding conventions and the pull request workflow. Report vulnerabilities according to [SECURITY.md](SECURITY.md).
 
 ## License
 
-MIT License - See [LICENSE](LICENSE) file.
+Licensed under the [MIT License](LICENSE).
